@@ -275,28 +275,33 @@ function openBook(b){const img=b.CoverURL&&b.CoverURL.trim();
 async function fetchCover(b){
   if(b.CoverURL&&String(b.CoverURL).trim())return String(b.CoverURL).trim();
   const title=b.Title||'',author=b.Author||'';
-  // 1) Open Library search -> cover id / isbn (reliable, CORS-friendly, no key)
-  try{
-    const u=`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&limit=1`;
-    const r=await fetch(u);const j=await r.json();const d=j.docs&&j.docs[0];
-    if(d){
-      if(d.cover_i)return `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;
-      if(d.isbn&&d.isbn[0])return `https://covers.openlibrary.org/b/isbn/${d.isbn[0]}-L.jpg`;
-    }
-  }catch(e){}
-  // 2) Google Books fallback (needs country param)
-  try{
-    const q=encodeURIComponent(`intitle:${title} inauthor:${author}`);
-    const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&country=US`);
-    const j=await r.json();
-    const il=j.items&&j.items[0]&&j.items[0].volumeInfo&&j.items[0].volumeInfo.imageLinks;
-    if(il){let x=il.thumbnail||il.smallThumbnail||'';return x.replace(/^http:/,'https:').replace('&edge=curl','');}
-  }catch(e){}
-  return '';
+  const grab=async(url,pick)=>{try{
+      const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),6000);
+      const r=await fetch(url,{signal:ctl.signal});clearTimeout(to);
+      if(!r.ok)return '';const j=await r.json();return pick(j)||'';
+    }catch(e){return '';}};
+  // 1) Google Books (CORS-enabled, matches by title/author)
+  let u=await grab(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent('intitle:'+title+' inauthor:'+author)}&maxResults=1&country=US`,
+    j=>{const il=j.items&&j.items[0]&&j.items[0].volumeInfo&&j.items[0].volumeInfo.imageLinks;
+        return il?String(il.thumbnail||il.smallThumbnail||'').replace(/^http:/,'https:').replace('&edge=curl',''):'';});
+  if(u)return u;
+  // 2) Open Library fallback
+  u=await grab(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&limit=1`,
+    j=>{const d=j.docs&&j.docs[0];if(!d)return '';
+        if(d.cover_i)return `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;
+        if(d.isbn&&d.isbn[0])return `https://covers.openlibrary.org/b/isbn/${d.isbn[0]}-L.jpg`;return '';});
+  return u||'';
 }
+function updateBookCover(b){const i=books.indexOf(b);if(i<0)return;
+  const el=document.querySelector('.book[data-i="'+i+'"] .bookcover');if(!el)return;
+  el.classList.add('cimg');
+  el.innerHTML=`<img src="${esc(String(b.CoverURL))}" alt="${esc(b.Title)}" loading="lazy" onerror="coverFail(${i})">`;}
 async function enrichCovers(){
-  await Promise.all(books.map(async b=>{if(!b.CoverURL||!String(b.CoverURL).trim()){const c=await fetchCover(b);if(c)b.CoverURL=c;}}));
-  const si=$('#shelfSearchInput');renderShelf(si?si.value:'');
+  // Each cover loads independently; a slow/failed one never blocks the others.
+  books.forEach(async b=>{
+    if(b.CoverURL&&String(b.CoverURL).trim()){updateBookCover(b);return;}
+    const c=await fetchCover(b);if(c){b.CoverURL=c;updateBookCover(b);}
+  });
 }
 async function initBooks(){
   try{
