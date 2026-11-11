@@ -26,7 +26,7 @@ let playing=false,prog=0,mi=null;const pb=$('#playBtn'),mbar=$('#mbar');
 pb.onclick=()=>{playing=!playing;pb.textContent=playing?'⏸':'▶';if(playing)mi=setInterval(()=>{prog=(prog+.6)%100;mbar.style.width=prog+'%';},120);else clearInterval(mi);};
 
 /* ---------------- ROTATOR ---------------- */
-const words=['MERN apps.','UI/UX designs.','trading EAs.','wallpapers.','panel boards.'];let wi=0;const rot=$('#rotator');
+const words=['MERN apps.','UI/UX designs.','trading EAs.','panel boards.'];let wi=0;const rot=$('#rotator');
 setInterval(()=>{wi=(wi+1)%words.length;rot.style.opacity=0;setTimeout(()=>{rot.innerHTML='<span>'+words[wi]+'</span>';rot.style.opacity=1;},250);},2200);
 
 /* (sound + unbloat buttons removed) */
@@ -46,7 +46,7 @@ const ringEl=$('#ring');
   el.innerHTML=`<div class="ctr">${ic[0]}</div>`;ringEl.appendChild(el);});
 const ow=$('#orbit');ow.addEventListener('mouseenter',()=>ow.classList.add('pause'));ow.addEventListener('mouseleave',()=>ow.classList.remove('pause'));
 const bi=$('#bigicons');
-[["R","React","MERN App, Market Tools"],["Nd","Node","MERN App, Market Tools"],["M","Mongo","MERN App"],["Fi","Figma","UI/UX, Wallpapers"],["Ps","Photoshop","Wallpaper Design"],["MQ","MQL5","Trading EA"],["TV","TradingView","Market Tools"]].forEach(x=>{
+[["R","React","MERN App, Market Tools"],["Nd","Node","MERN App, Market Tools"],["M","Mongo","MERN App"],["Fi","Figma","UI/UX, Design"],["Ps","Photoshop","UI/UX, Visuals"],["MQ","MQL5","Trading EA"],["TV","TradingView","Market Tools"]].forEach(x=>{
   const el=document.createElement('div');el.className='bigicon';el.innerHTML=`${x[0]}<span class="tip">${x[1]} · ${x[2]}</span>`;bi.appendChild(el);});
 
 /* ---------------- WORK FINDER ---------------- */
