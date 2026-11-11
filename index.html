@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nandigama Prashanth Kumar — UI/UX & MERN developer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="corner theme-toggle" id="themeToggle"><span id="ticon">◐</span><span id="tlabel">Dark</span></div>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="hero">
+  <div class="widget clock">
+    <div class="loc"><span class="pip"></span> <span id="locName">YOUR CITY</span></div>
+    <div class="time" id="clockTime">00:00<small>AM</small></div>
+    <div class="sub">Same time zone as you</div>
+    <div class="chip-mode" id="clockMode">🌙 Up late, probably debugging</div>
+  </div>
+  <div class="widget gh">
+    <div class="top"><span>◉ @yourhandle</span><span class="yr">— this year</span></div>
+    <div class="grid-gh" id="ghGrid"></div>
+    <div class="streak">🔥 <span id="streakTxt">add your GitHub to show the streak</span></div>
+  </div>
+  <div class="widget music">
+    <div class="mhead"><span class="pip"></span> RECENTLY LISTENED</div>
+    <div class="art">🎧</div><div class="mtitle" id="musicTitle">—</div><div class="martist" id="musicArtist"></div>
+    <div class="bar"><i id="mbar"></i></div>
+    <div class="ctrls"><span class="ic">⏮</span><button class="play" id="playBtn">▶</button><span class="ic">↻</span></div>
+  </div>
+  <div class="widget photo"><div class="img" id="photoWidget"><span class="tag">that's me</span></div></div>
+
+  <div class="folders" id="folders"></div>
+
+  <div class="player-card">
+    <div class="pc-tag">PLAYER 1</div><div class="pc-name">PRASHANTH KUMAR</div>
+    <div class="row"><span>CLASS</span><span>UI/UX + MERN dev</span></div>
+    <div class="row"><span>BASE</span><span id="pcBase">India</span></div>
+    <div class="row"><span>QUEST</span><span>Shipping this site</span></div>
+  </div>
+
+  <div class="social">
+    <a href="#" title="GitHub">◉</a><a href="#" title="LinkedIn">in</a><a href="#" title="X">X</a><a href="#" title="Mail">✉</a>
+  </div>
+
+  <div class="ghosts">
+    <div class="ghost-sel"></div>
+    <div class="glabel" style="left:14%;top:18%">Prashanth (final) (2)</div>
+    <div class="glabel" style="left:34%;top:27%">Me after chai</div>
+    <div class="glabel" style="left:56%;top:55%">Me (final)</div>
+    <div class="glabel" style="left:44%;top:81%">Still me</div>
+    <div class="glabel" style="right:2%;top:30%">Me at last</div>
+    <div class="glabel" style="right:4%;top:41%">Me, 3 AM</div>
+    <div class="glabel" style="right:5%;bottom:30%">Also me</div>
+    <div class="glabel" style="left:1.5%;top:5.5%">Everything</div>
+  </div>
+
+  <div class="hero-center">
+    <h1>I'm Prashanth.</h1>
+    <div class="build-line"><h1>I build</h1><h1 class="rotator" id="rotator"><span>MERN apps.</span></h1></div>
+    <p>I design interfaces, ship full-stack apps, craft wallpapers, and build stock-market tools and trading EAs. Bring a rough idea, and we'll figure out the rest together.</p>
+  </div>
+</header>
+
+<!-- ================= WORK ================= -->
+<section class="wrap" id="work">
+  <div class="section-tag">Selected work</div>
+  <h2 class="section-title">Things I've built.</h2>
+  <div class="finder">
+    <div class="fbar"><div class="traffic"><i></i><i></i><i></i></div><div class="ftitle">📁 Work</div><div class="fcount">6 items</div></div>
+    <div class="fbody">
+      <div class="fside"><div class="lbl">FAVOURITES</div>
+        <div class="item active">All work <span class="n">6</span></div><div class="item">Live <span class="n">3</span></div>
+        <div class="item">Design <span class="n">2</span></div><div class="item">Trading <span class="n">2</span></div>
+        <div class="item">Hardware <span class="n">1</span></div></div>
+      <div class="flist"><div class="fhead"><span>Name</span><span>Kind</span><span>Built</span></div><div id="rows"></div></div>
+      <div class="fdetail" id="detail"></div>
+    </div>
+    <div class="fpath">📁 prashanth <span>›</span> work <span>›</span> <span id="crumb"></span><span class="click">Double-click a folder to open</span></div>
+  </div>
+</section>
+
+<!-- ================= NEWSLETTER CAROUSEL ================= -->
+<section class="wrap" id="newsletter">
+  <div class="section-tag">On LinkedIn</div>
+  <h2 class="section-title">My newsletter.</h2>
+  <div class="caronav"><button id="caroPrev">‹</button><button id="caroNext">›</button></div>
+  <div class="carowrap"><div class="carotrack" id="carotrack"></div></div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="wrap" id="about">
+  <div class="section-tag">About</div>
+  <h2 class="section-title">The person behind the folders.</h2>
+  <div class="about-grid">
+    <div class="finder aboutcard">
+      <div class="fbar"><div class="traffic"><i></i><i></i><i></i></div><div class="ftitle">About Prashanth</div></div>
+      <div class="fbody2">
+        <div><div class="orbit" id="orbit"><div class="dash"></div><div class="ring" id="ring"></div>
+          <div class="center"><img src="assets/me.jpg" alt="Nandigama Prashanth Kumar"></div></div></div>
+        <div>
+          <h3>Nandigama Prashanth Kumar</h3>
+          <div class="asub">UI/UX Designer &amp; MERN-stack developer · designs, apps, trading tools</div>
+          <div class="arow"><div class="k">Based in</div><div class="v" id="aboutBase">India</div></div>
+          <div class="arow"><div class="k">Writes</div><div class="v">JavaScript &amp; TypeScript</div></div>
+          <div class="arow"><div class="k">Main stack</div><div class="v">MongoDB, Express, React, Node</div></div>
+          <div class="arow"><div class="k">Also does</div><div class="v">UI/UX, wallpaper design, trading EAs</div></div>
+          <div class="arow"><div class="k">Offline</div><div class="v">Panel-board manufacturing</div></div>
+          <div class="arow"><div class="k">Open to</div><div class="v">Freelance &amp; full-time roles</div></div>
+          <div class="alinks"><a class="btn" href="#">Résumé</a><a class="btn" href="#">GitHub</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><div class="ntag">CONFESSION</div>I once pushed an EA live on a demo account and <mark>forgot the stop-loss</mark>. It survived. I did not sleep that night.</div>
+  </div>
+
+  <div class="skillcard" style="margin-top:28px">
+    <div class="skillhead"><div class="sh">WHAT I BUILD WITH</div><div class="sh">Hover one to see where I used it · Drag me</div></div>
+    <div class="bigicons" id="bigicons"></div>
+    <div class="skill-cat"><div class="clbl">EVERY DAY</div><div class="chips">
+      <span class="chip"><span class="ci">R</span>React</span><span class="chip"><span class="ci">Nd</span>Node.js</span>
+      <span class="chip"><span class="ci">Ex</span>Express</span><span class="chip"><span class="ci">M</span>MongoDB</span>
+      <span class="chip"><span class="ci">JS</span>JavaScript</span><span class="chip"><span class="ci">TS</span>TypeScript</span></div></div>
+    <div class="skill-cat"><div class="clbl">DESIGN</div><div class="chips">
+      <span class="chip"><span class="ci">Fi</span>Figma</span><span class="chip"><span class="ci">UX</span>UI/UX</span>
+      <span class="chip"><span class="ci">Ps</span>Photoshop</span><span class="chip"><span class="ci">Il</span>Illustrator</span>
+      <span class="chip"><span class="ci">T</span>Tailwind CSS</span></div></div>
+    <div class="skill-cat"><div class="clbl">TRADING</div><div class="chips">
+      <span class="chip"><span class="ci">MQ</span>MQL4 / MQL5</span><span class="chip"><span class="ci">Pn</span>Pine Script</span>
+      <span class="chip"><span class="ci">TV</span>TradingView</span><span class="chip"><span class="ci">MT</span>MetaTrader</span></div></div>
+    <div class="skill-cat"><div class="clbl">ALSO</div><div class="chips">
+      <span class="chip"><span class="ci">Gt</span>Git</span>
+      <span class="chip"><span class="ci">Pb</span>Panel boards</span></div></div>
+  </div>
+
+  <div class="howrow">
+    <div class="how"><div class="num">01</div><h4>Design then build</h4><p>I <mark>start in Figma</mark>, then take it all the way to a deployed MERN app — not a handoff, the whole thing.</p></div>
+    <div class="how"><div class="num">02</div><h4>Careful with money</h4><p>Trading tools stay <mark>deterministic and backtested</mark>. An EA follows rules; it never improvises with real capital.</p></div>
+    <div class="how"><div class="num">03</div><h4>Fun to work with</h4><p>I <mark>share progress early</mark>, explain the trade-offs, and say so when I'm stuck.</p></div>
+  </div>
+</section>
+
+<!-- ================= LEARNINGS & PODCASTS ================= -->
+<section class="wrap" id="learnings">
+  <div class="section-tag">Always learning</div>
+  <h2 class="section-title">Learnings &amp; podcasts.</h2>
+  <div style="display:flex;align-items:center;flex-wrap:wrap">
+    <div class="tabbar" id="learnTabs">
+      <button class="on" data-t="learnings">📝 Learnings</button>
+      <button data-t="podcasts">🎧 Podcasts</button>
+    </div>
+    <div class="livedot" id="learnLive"><i></i><span>Loading…</span></div>
+  </div>
+  <div id="learnBody"></div>
+</section>
+
+<!-- ================= BOOKSHELF ================= -->
+<section class="wrap" id="shelf">
+  <div class="section-tag">What I've read</div>
+  <div class="shelfhead">
+    <h2 class="section-title" style="margin-bottom:0">The bookshelf.</h2>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <div class="livedot" id="bookLive"><i></i><span>Loading…</span></div>
+      <div class="shelfsearch">🔍 <input id="shelfSearchInput" placeholder="Search books…"></div>
+    </div>
+  </div>
+  <div class="shelfunit" id="shelfUnit"></div>
+  <p style="font-size:12px;color:var(--ink-faint);margin-top:12px">Sorted A→Z · click a book to see what I took from it</p>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="wrap" id="contact">
+  <div class="section-tag">Contact</div>
+  <h2 class="section-title">Got something fun to build?</h2>
+  <div class="mail">
+    <div class="fbar"><div class="traffic"><i></i><i></i><i></i></div><div class="ftitle">New Message</div><div class="fcount">✒</div></div>
+    <div class="mailrow"><span class="lab">To:</span><span class="to"><span class="av" id="mailAv"></span>Nandigama Prashanth Kumar</span><span class="email" id="emailTxt">your-email@example.com</span><span class="copy" id="copyBtn">Copy</span></div>
+    <div class="mailrow"><span class="lab">Subject:</span><div class="subchips">
+      <span class="subchip active">A project idea</span><span class="subchip">UI/UX work</span>
+      <span class="subchip">A trading tool</span><span class="subchip">Just saying hi</span></div></div>
+    <div class="mailrow"><span class="lab">From:</span><input id="fromField" placeholder="Your name"></div>
+    <textarea id="bodyField" placeholder="Hey Prashanth, I've got this idea for..."></textarea>
+    <div class="mailfoot"><button class="send" id="sendBtn">✈ Send</button><button class="ghostbtn">📅 Or grab 15 minutes</button><span class="hint">Opens in your mail app</span></div>
+  </div>
+  <div class="namewrap">
+    <canvas id="nameCanvas"></canvas>
+    <div class="namehint">Wave your cursor through it. Click to scatter.</div>
+    <button class="likebtn" id="likeBtn">♡ Like this site? <span class="ct" id="likeCt">0</span></button>
+  </div>
+</section>
+
+<footer>
+  <div class="flinks"><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">X</a></div>
+  © Nandigama Prashanth Kumar · Built as a black &amp; white portfolio.
+</footer>
+
+<nav class="dock">
+  <a href="#work" title="Work">📁</a>
+  <a data-open="figma" title="UI/UX Designs (Figma)">✎</a>
+  <a data-open="articles" title="My Articles">📝</a>
+  <a href="#about" title="About">👤</a>
+  <a href="#learnings" title="Learnings">🎧</a>
+  <a href="#shelf" title="Bookshelf">📚</a>
+  <a href="#contact" title="Contact">✉</a>
+</nav>
+
+<!-- ================= MODAL SHELL ================= -->
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
