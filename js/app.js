@@ -239,7 +239,11 @@ function nlCardHTML(n){return `<a class="nlcard" href="${esc(n.link||'#')}" ${n.
 function renderCarousel(list){const h=list.map(nlCardHTML).join('');track.innerHTML=h+h;} // duplicate for seamless loop
 renderCarousel(NEWSLETTER);
 async function initNewsletter(){
-  const r=await loadSheet(SHEETS.newsletter,null);
+  let r=await loadSheet(SHEETS.newsletter,null);
+  if(!(r.data&&r.data.length)){
+    // fallback: read the Newsletter tab via the sharing-based endpoint
+    r=await loadSheet('https://docs.google.com/spreadsheets/d/1CLtONoVAuozDXCJLA7dHOBPvi1rlo3rbanlZ_PnAuRM/gviz/tq?tqx=out:csv&sheet=Newsletter',null);
+  }
   if(r.data&&r.data.length){
     const list=r.data.map(x=>({issue:x.Issue||'',title:x.Title||'',date:fmtDate(x.Date)||x.Date||'',blurb:x.Blurb||'',link:x.Link||'#'}));
     renderCarousel(list);
