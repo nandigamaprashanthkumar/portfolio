@@ -233,10 +233,18 @@ $$('#learnTabs button').forEach(b=>b.onclick=()=>{learnTab=b.dataset.t;$$('#lear
    NEWSLETTER CAROUSEL
    ========================================================== */
 const track=$('#carotrack');
-const nlHTML=NEWSLETTER.map(n=>`<a class="nlcard" href="${esc(n.link)}" ${n.link&&n.link!=='#'?'target="_blank" rel="noopener"':''}>
-  <div class="nltop"><span class="nlbadge">${esc(n.issue)}</span> LINKEDIN NEWSLETTER · ${esc(n.date)}</div>
-  <h4>${esc(n.title)}</h4><p>${esc(n.blurb)}</p><div class="nlfoot">Read on LinkedIn →</div></a>`).join('');
-track.innerHTML=nlHTML+nlHTML; // duplicate for seamless loop
+function nlCardHTML(n){return `<a class="nlcard" href="${esc(n.link||'#')}" ${n.link&&n.link!=='#'?'target="_blank" rel="noopener"':''}>
+  <div class="nltop"><span class="nlbadge">${esc(n.issue||'')}</span> BEYOND THE CODE · ${esc(n.date||'')}</div>
+  <h4>${esc(n.title||'')}</h4><p>${esc(n.blurb||'')}</p><div class="nlfoot">Read on LinkedIn →</div></a>`;}
+function renderCarousel(list){const h=list.map(nlCardHTML).join('');track.innerHTML=h+h;} // duplicate for seamless loop
+renderCarousel(NEWSLETTER);
+async function initNewsletter(){
+  const r=await loadSheet(SHEETS.newsletter,null);
+  if(r.data&&r.data.length){
+    const list=r.data.map(x=>({issue:x.Issue||'',title:x.Title||'',date:fmtDate(x.Date)||x.Date||'',blurb:x.Blurb||'',link:x.Link||'#'}));
+    renderCarousel(list);
+  }
+}
 $('#caroPrev').onclick=()=>nudge(-1);$('#caroNext').onclick=()=>nudge(1);
 function nudge(dir){track.classList.add('paused');const cur=getComputedStyle(track).transform;
   const x=(new DOMMatrix(cur)).m41;track.style.transition='transform .4s';track.style.transform=`translateX(${x-dir*348}px)`;
@@ -360,4 +368,4 @@ window.addEventListener('resize',sizeCanvas);sizeCanvas();frame();
    then asynchronously upgrade to live Google Sheet data. */
 books=SAMPLE_BOOKS;try{renderShelf();}catch(e){console.error('shelf',e);}
 learnData=SAMPLE_LEARNINGS;podData=SAMPLE_PODCASTS;try{renderLearnTab();}catch(e){console.error('learn',e);}
-initLearnings();initBooks();
+initLearnings();initBooks();initNewsletter();
