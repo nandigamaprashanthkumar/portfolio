@@ -17,9 +17,30 @@ function tick(){const d=new Date();let h=d.getHours();const m=String(d.getMinute
   $('#clockTime').innerHTML=hh+':'+m+'<small>'+ap+'</small>';let mood=moods[0][1];for(const mm of moods)if(h>=mm[0])mood=mm[1];$('#clockMode').textContent=mood;}
 tick();setInterval(tick,1000);
 
-/* ---------------- GITHUB GRID ---------------- */
+/* ---------------- GITHUB GRID (live) ---------------- */
+const GH_USER='nandigamaprashanthkumar';
 const grid=$('#ghGrid'),lv=['','l1','l2','l3','l4'];
 for(let i=0;i<17*7;i++){const c=document.createElement('div');const r=Math.random();const l=r>.82?4:r>.65?3:r>.45?2:r>.25?1:0;c.className='cell '+lv[l];grid.appendChild(c);}
+if($('#ghUser'))$('#ghUser').textContent='◉ @'+GH_USER;
+async function initGitHub(){
+  try{
+    const yr=new Date().getFullYear();
+    const r=await fetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=${yr}`);
+    if(!r.ok)return;const j=await r.json();const all=j.contributions||[];if(!all.length)return;
+    const today=new Date().toISOString().slice(0,10);
+    const past=all.filter(c=>c.date<=today);if(!past.length)return;
+    const total=(j.total&&(j.total[yr]||j.total[String(yr)]))||past.reduce((a,c)=>a+(c.count||0),0);
+    if($('#ghYear'))$('#ghYear').textContent=total.toLocaleString()+' this year';
+    grid.innerHTML='';
+    past.slice(-119).forEach(c=>{const d=document.createElement('div');
+      const lvl=(c.level!=null)?c.level:(c.count>=10?4:c.count>=5?3:c.count>=2?2:c.count>=1?1:0);
+      d.className='cell '+lv[lvl];grid.appendChild(d);});
+    let streak=0;for(let i=past.length-1;i>=0;i--){if((past[i].count||0)>0)streak++;else break;}
+    const todayCount=past[past.length-1].count||0;
+    if($('#streakTxt'))$('#streakTxt').textContent=streak+'-day streak · '+todayCount+' today';
+  }catch(e){}
+}
+initGitHub();
 
 /* ---------------- MUSIC ---------------- */
 let playing=false,prog=0,mi=null;const pb=$('#playBtn'),mbar=$('#mbar');
