@@ -317,7 +317,7 @@ $$('.dock a[data-open]').forEach(a=>a.onclick=e=>{e.preventDefault();const k=a.d
 /* ==========================================================
    CONTACT + LIKE + NAME PARTICLES
    ========================================================== */
-const EMAIL='your-email@example.com';
+const EMAIL='nandigamaprashanthkumar@gmail.com';
 $('#copyBtn').onclick=e=>{navigator.clipboard?.writeText(EMAIL);e.target.textContent='Copied';setTimeout(()=>e.target.textContent='Copy',1400);};
 $$('.subchip').forEach(c=>c.onclick=()=>{$$('.subchip').forEach(x=>x.classList.remove('active'));c.classList.add('active');});
 $('#sendBtn').onclick=()=>{const s=$('.subchip.active').textContent,f=$('#fromField').value,b=$('#bodyField').value;
