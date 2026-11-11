@@ -432,3 +432,7 @@ html[data-theme="dark"] .mtop .traffic i.close{background:#555}
   .suggest button{max-width:100%}
   .book{width:78px}.bookcover{height:112px}
 }
+
+/* id=newsletter spacing */
+#newsletter{margin-top:64px}
+#newsletter .caronav{margin-top:6px}
