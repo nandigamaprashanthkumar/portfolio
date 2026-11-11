@@ -4,8 +4,13 @@ const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 
 /* ---------------- THEME ---------------- */
 const root=document.documentElement,tt=$('#themeToggle');
+function setFavicon(dark){const bg=dark?'#f5f5f5':'#0a0a0a',fg=dark?'#0a0a0a':'#ffffff';
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='${bg}'/><text x='50' y='54' font-family='Arial,Helvetica,sans-serif' font-size='64' font-weight='800' fill='${fg}' text-anchor='middle' dominant-baseline='central'>P</text></svg>`;
+  let l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}
+  l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(svg);}
+setFavicon(root.getAttribute('data-theme')==='dark');
 tt.onclick=()=>{const d=root.getAttribute('data-theme')==='dark';root.setAttribute('data-theme',d?'light':'dark');
-  $('#ticon').textContent=d?'◐':'◑';$('#tlabel').textContent=d?'Dark':'Light';readInk();};
+  $('#ticon').textContent=d?'◐':'◑';$('#tlabel').textContent=d?'Dark':'Light';readInk();setFavicon(!d);};
 
 /* ---------------- PHOTO ---------------- */
 $('#photoWidget').style.backgroundImage="url('assets/me.jpg')";
