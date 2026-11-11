@@ -246,9 +246,11 @@ function nudge(dir){track.classList.add('paused');const cur=getComputedStyle(tra
    BOOKSHELF (alphabetical)
    ========================================================== */
 let books=[];
-function shelfSpine(b,i){const img=b.CoverURL&&b.CoverURL.trim();
+function coverFail(i){const b=books[i]||{};const el=document.querySelector('.book[data-i="'+i+'"] .bookcover');
+  if(el){el.classList.remove('cimg');el.innerHTML=`<div class="bt">${esc(b.Title)}</div><div class="ba">${esc(b.Author||'')}</div>`;}}
+function shelfSpine(b,i){const img=b.CoverURL&&String(b.CoverURL).trim();
   return `<div class="book" data-i="${i}">${b.Rating?`<span class="brate">★ ${esc(b.Rating)}</span>`:''}
-    <div class="bookcover ${img?'cimg':''}">${img?`<img src="${esc(b.CoverURL)}" alt="${esc(b.Title)}">`:
+    <div class="bookcover ${img?'cimg':''}">${img?`<img src="${esc(String(b.CoverURL))}" alt="${esc(b.Title)}" loading="lazy" onerror="coverFail(${i})">`:
       `<div class="bt">${esc(b.Title)}</div><div class="ba">${esc(b.Author||'')}</div>`}</div></div>`;}
 function renderShelf(filter=''){
   const wrap=$('#shelfUnit');const f=filter.toLowerCase();
@@ -272,13 +274,23 @@ function openBook(b){const img=b.CoverURL&&b.CoverURL.trim();
       ${b.Tags?`<div class="atags" style="margin-top:16px">${b.Tags.split(',').map(t=>`<span>${esc(t.trim())}</span>`).join('')}</div>`:''}</div></div>`);}
 async function fetchCover(b){
   if(b.CoverURL&&String(b.CoverURL).trim())return String(b.CoverURL).trim();
+  const title=b.Title||'',author=b.Author||'';
+  // 1) Open Library search -> cover id / isbn (reliable, CORS-friendly, no key)
   try{
-    const q=encodeURIComponent(`intitle:${b.Title||''} inauthor:${b.Author||''}`);
-    const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`);
+    const u=`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&limit=1`;
+    const r=await fetch(u);const j=await r.json();const d=j.docs&&j.docs[0];
+    if(d){
+      if(d.cover_i)return `https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`;
+      if(d.isbn&&d.isbn[0])return `https://covers.openlibrary.org/b/isbn/${d.isbn[0]}-L.jpg`;
+    }
+  }catch(e){}
+  // 2) Google Books fallback (needs country param)
+  try{
+    const q=encodeURIComponent(`intitle:${title} inauthor:${author}`);
+    const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&country=US`);
     const j=await r.json();
-    const vi=j.items&&j.items[0]&&j.items[0].volumeInfo;
-    const il=vi&&vi.imageLinks;
-    if(il){let u=il.thumbnail||il.smallThumbnail||'';return u.replace(/^http:/,'https:').replace('&edge=curl','');}
+    const il=j.items&&j.items[0]&&j.items[0].volumeInfo&&j.items[0].volumeInfo.imageLinks;
+    if(il){let x=il.thumbnail||il.smallThumbnail||'';return x.replace(/^http:/,'https:').replace('&edge=curl','');}
   }catch(e){}
   return '';
 }
