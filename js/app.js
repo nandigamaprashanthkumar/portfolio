@@ -284,23 +284,36 @@ function nudge(dir){track.classList.add('paused');const cur=getComputedStyle(tra
    BOOKSHELF (alphabetical)
    ========================================================== */
 let books=[];
-function coverFail(i){const b=books[i]||{};const el=document.querySelector('.book[data-i="'+i+'"] .bookcover');
-  if(el){el.classList.remove('cimg');el.innerHTML=`<div class="bt">${esc(b.Title)}</div><div class="ba">${esc(b.Author||'')}</div>`;}}
-function shelfSpine(b,i){const img=b.CoverURL&&String(b.CoverURL).trim();
-  return `<div class="book" data-i="${i}">${b.Rating?`<span class="brate">★ ${esc(b.Rating)}</span>`:''}
-    <div class="bookcover ${img?'cimg':''}">${img?`<img src="${esc(String(b.CoverURL))}" alt="${esc(b.Title)}" loading="lazy" onerror="coverFail(${i})">`:
-      `<div class="bt">${esc(b.Title)}</div><div class="ba">${esc(b.Author||'')}</div>`}</div></div>`;}
+const SPINE_GREYS=['#161616','#232323','#30302f','#3e3e3e','#555','#6b6b6b','#858585','#a1a1a1','#bfbfbf','#d7d7d7','#eaeaea'];
+function hashStr(s){let h=0;s=s||'';for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function spineStyle(b){
+  const h=hashStr((b.Title||'')+'|'+(b.Author||''));
+  const bg=SPINE_GREYS[h%SPINE_GREYS.length];
+  const n=parseInt(bg.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,bl=n&255,lum=(0.299*r+0.587*g+0.114*bl)/255;
+  const fg=lum<0.55?'#f2f2f2':'#161616';
+  const sc=window.innerWidth<560?0.82:window.innerWidth<900?0.92:1;
+  const w=Math.round((32+(h%6)*4)*sc),ht=Math.round((160+((h>>3)%5)*12)*sc),fs=Math.max(9,Math.min(13,Math.round(w*0.3)));
+  return {bg:bg,fg:fg,w:w,ht:ht,fs:fs};
+}
+function spineHTML(b,i,s){
+  return `<div class="book" data-i="${i}" style="width:${s.w}px;height:${s.ht}px;background:${s.bg};color:${s.fg};font-size:${s.fs}px">`
+    +`${b.Rating?'<span class="brate">\u2605</span>':''}`
+    +`<span class="st2">${esc(b.Title||'')}</span><span class="sa2">${esc(b.Author||'')}</span></div>`;
+}
 function renderShelf(filter=''){
-  const wrap=$('#shelfUnit');const f=filter.toLowerCase();
-  const list=books.filter(b=>!f||(b.Title+' '+(b.Author||'')+' '+(b.Tags||'')).toLowerCase().includes(f))
+  const wrap=$('#shelfUnit');if(!wrap)return;const f=(filter||'').toLowerCase();
+  const list=books.filter(b=>!f||((b.Title||'')+' '+(b.Author||'')+' '+(b.Tags||'')).toLowerCase().includes(f))
     .slice().sort((a,b)=>(a.Title||'').localeCompare(b.Title||'',undefined,{sensitivity:'base'}));
-  if(!list.length){wrap.innerHTML=emptyMsg('books','Title · Author · Status · Rating · Finished · Learnings · Tags · CoverURL');return;}
-  const groups={};list.forEach(b=>{const L=(b.Title||'#').trim().charAt(0).toUpperCase();const k=/[A-Z]/.test(L)?L:'#';(groups[k]=groups[k]||[]).push(b);});
-  const letters=Object.keys(groups).sort();
-  wrap.innerHTML=letters.map(L=>`<div class="shelf"><div class="shelflabel">${L}</div>
-    <div class="shelfrow">${groups[L].map(b=>shelfSpine(b,books.indexOf(b))).join('')}</div>
-    <div class="shelfplank"></div></div>`).join('');
-  $$('.book',wrap).forEach(el=>el.onclick=()=>openBook(books[+el.dataset.i]));}
+  if(!list.length){wrap.innerHTML=emptyMsg('books','Title, Author, Status, Rating, Finished, Learnings, Tags, CoverURL');return;}
+  const cw=Math.max(240,(wrap.clientWidth||820)-48),gap=2;
+  let rows=[],cur=[],curW=0;
+  list.forEach(b=>{const s=spineStyle(b),w=s.w+gap;
+    if(curW+w>cw&&cur.length){rows.push(cur);cur=[];curW=0;}
+    cur.push({b:b,s:s});curW+=w;});
+  if(cur.length)rows.push(cur);
+  wrap.innerHTML=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
+  $$('.book',wrap).forEach(el=>el.onclick=()=>openBook(books[+el.dataset.i]));
+}
 function openBook(b){const img=b.CoverURL&&b.CoverURL.trim();
   openModal('small bookmodal',`<div class="mtop"><div class="traffic"><i class="close"></i><i></i><i></i></div><div class="mtitle">Bookshelf — ${esc(b.Title)}</div></div>
     <div class="bmgrid"><div><div class="bmcover ${img?'cimg':''}" ${img?`style="padding:0;overflow:hidden"`:''}>
@@ -330,16 +343,9 @@ async function fetchCover(b){
         if(d.isbn&&d.isbn[0])return `https://covers.openlibrary.org/b/isbn/${d.isbn[0]}-L.jpg`;return '';});
   return u||'';
 }
-function updateBookCover(b){const i=books.indexOf(b);if(i<0)return;
-  const el=document.querySelector('.book[data-i="'+i+'"] .bookcover');if(!el)return;
-  el.classList.add('cimg');
-  el.innerHTML=`<img src="${esc(String(b.CoverURL))}" alt="${esc(b.Title)}" loading="lazy" onerror="coverFail(${i})">`;}
 async function enrichCovers(){
-  // Each cover loads independently; a slow/failed one never blocks the others.
-  books.forEach(async b=>{
-    if(b.CoverURL&&String(b.CoverURL).trim()){updateBookCover(b);return;}
-    const c=await fetchCover(b);if(c){b.CoverURL=c;updateBookCover(b);}
-  });
+  // fetch covers for the detail modal only (spines show the title, not the cover)
+  await Promise.all(books.map(async b=>{if(!b.CoverURL||!String(b.CoverURL).trim()){const c=await fetchCover(b);if(c)b.CoverURL=c;}}));
 }
 async function initBooks(){
   try{
@@ -391,7 +397,8 @@ function frame(){const r=canvas.getBoundingClientRect();ctx.clearRect(0,0,r.widt
 canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
 canvas.addEventListener('mouseleave',()=>{mouse.x=mouse.y=-9999;});
 canvas.addEventListener('click',()=>{for(const p of particles){p.vx+=(Math.random()-0.5)*40;p.vy+=(Math.random()-0.5)*40;}});
-window.addEventListener('resize',sizeCanvas);sizeCanvas();frame();
+window.addEventListener('resize',sizeCanvas);
+window.addEventListener('resize',()=>{clearTimeout(window.__srt);window.__srt=setTimeout(()=>{const si=$('#shelfSearchInput');renderShelf(si?si.value:'');},180);});sizeCanvas();frame();
 
 /* ---------------- INIT DATA ----------------
    Render sample content immediately so the shelf/lists are never blank,
