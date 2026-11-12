@@ -344,8 +344,11 @@ async function fetchCover(b){
   return u||'';
 }
 async function enrichCovers(){
-  // fetch covers for the detail modal only (spines show the title, not the cover)
-  await Promise.all(books.map(async b=>{if(!b.CoverURL||!String(b.CoverURL).trim()){const c=await fetchCover(b);if(c)b.CoverURL=c;}}));
+  // resolve + preload every cover so the detail modal renders instantly on open
+  await Promise.all(books.map(async b=>{
+    if(!b.CoverURL||!String(b.CoverURL).trim()){const c=await fetchCover(b);if(c)b.CoverURL=c;}
+    if(b.CoverURL){const im=new Image();im.src=String(b.CoverURL);}
+  }));
 }
 async function initBooks(){
   try{
