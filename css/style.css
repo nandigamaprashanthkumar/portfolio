@@ -430,3 +430,7 @@ html[data-theme="dark"] .mtop .traffic i.close{background:#555}
 /* consistent section spacing */
 #newsletter,#about,#learnings,#shelf,#contact{margin-top:64px}
 #newsletter .caronav{margin-top:6px}
+
+/* bookshelf/learnings: dot only, no text */
+.livedot span{display:none}
+.livedot{gap:0}
