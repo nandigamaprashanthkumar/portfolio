@@ -410,3 +410,18 @@ window.addEventListener('resize',()=>{clearTimeout(window.__srt);window.__srt=se
 books=SAMPLE_BOOKS;try{renderShelf();}catch(e){console.error('shelf',e);}
 learnData=SAMPLE_LEARNINGS;podData=SAMPLE_PODCASTS;try{renderLearnTab();}catch(e){console.error('learn',e);}
 initLearnings();initBooks();initNewsletter();
+
+/* ---------------- CUSTOM FOLLOWER CURSOR ---------------- */
+(function(){
+  if(!window.matchMedia||!matchMedia('(pointer:fine)').matches)return;
+  const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+  if(!dot||!ring)return;
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform='translate('+mx+'px,'+my+'px)';},{passive:true});
+  (function loop(){rx+=(mx-rx)*0.2;ry+=(my-ry)*0.2;ring.style.transform='translate('+rx+'px,'+ry+'px)';requestAnimationFrame(loop);})();
+  const sel='a,button,input,textarea,.folder,.book,.chip,.subchip,.bigicon,.oicon,.frow,.nlcard,.askrow,.copy,.send,.likebtn,.ghostbtn,.caronav button,.tabbar button,.corner,.dock a,.social a,.suggest button,.mtop .toggle button,.shelfsearch';
+  addEventListener('mouseover',e=>{if(e.target.closest&&e.target.closest(sel))document.body.classList.add('cur-hover');},{passive:true});
+  addEventListener('mouseout',e=>{if(e.target.closest&&e.target.closest(sel))document.body.classList.remove('cur-hover');},{passive:true});
+  addEventListener('mousedown',()=>document.body.classList.add('cur-down'),{passive:true});
+  addEventListener('mouseup',()=>document.body.classList.remove('cur-down'),{passive:true});
+})();

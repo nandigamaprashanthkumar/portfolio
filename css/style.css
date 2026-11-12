@@ -434,3 +434,16 @@ html[data-theme="dark"] .mtop .traffic i.close{background:#555}
 /* bookshelf/learnings: dot only, no text */
 .livedot span{display:none}
 .livedot{gap:0}
+
+
+/* custom follower cursor (fine pointers only) */
+@media(pointer:fine){
+  *{cursor:none!important}
+  #curDot,#curRing{position:fixed;left:0;top:0;pointer-events:none;z-index:99999;border-radius:50%;mix-blend-mode:difference}
+  #curDot{width:8px;height:8px;background:#fff;margin:-4px 0 0 -4px;transition:width .18s,height .18s,margin .18s}
+  #curRing{width:34px;height:34px;border:1.6px solid #fff;margin:-17px 0 0 -17px;opacity:.9;transition:width .22s,height .22s,margin .22s,opacity .22s}
+  body.cur-hover #curRing{width:56px;height:56px;margin:-28px 0 0 -28px}
+  body.cur-hover #curDot{width:0;height:0;margin:0}
+  body.cur-down #curRing{width:26px;height:26px;margin:-13px 0 0 -13px}
+}
+@media(pointer:coarse){#curDot,#curRing{display:none}}
