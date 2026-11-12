@@ -54,10 +54,11 @@ section{padding:90px 0;position:relative;z-index:1}
 .clock .time small{font-size:14px;font-weight:700;color:var(--ink-faint);margin-left:4px}
 .clock .sub{font-size:12px;color:var(--ink-faint);margin-top:2px}
 .chip-mode{margin-top:12px;background:var(--bg2);border-radius:11px;padding:8px 10px;font-size:12px;font-weight:600}
-.gh{top:4%;left:16%;width:232px;padding:14px 16px;transform:rotate(2deg)}
-.gh .top{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;color:var(--ink-soft)}
-.gh .top .yr{color:var(--ink-faint);font-weight:500}
-.grid-gh{display:grid;grid-template-columns:repeat(17,1fr);gap:3px;margin:12px 0 10px}
+.gh{top:4%;left:15%;width:252px;padding:16px 18px;transform:rotate(2deg)}
+.gh .top{display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-weight:600;color:var(--ink-soft)}
+.gh .top>span:first-child{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.gh .top .yr{font-size:11px;color:var(--ink-faint);font-weight:500}
+.grid-gh{display:grid;grid-template-columns:repeat(17,1fr);gap:3.5px;margin:15px 0 13px}
 .cell{width:100%;aspect-ratio:1;border-radius:2.5px;background:var(--bg2)}
 .cell.l1{background:var(--line-strong)}.cell.l2{background:var(--ink-faint)}.cell.l3{background:var(--ink-soft)}.cell.l4{background:var(--ink)}
 .gh .streak{font-size:12px;font-weight:600}
