@@ -234,7 +234,7 @@ html[data-theme="dark"] .dock{background:rgba(28,28,28,.6)}
 
 /* ---------- BOOKSHELF ---------- */
 .shelfunit{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:26px 30px 16px}
-.shelfrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;overflow:hidden}
+.shelfrow{display:flex;align-items:flex-end;gap:2px;flex-wrap:nowrap;padding-top:18px}
 .shelfplank{height:13px;border-radius:0 0 3px 3px;background:linear-gradient(180deg,var(--line-strong),var(--wood));box-shadow:0 8px 16px rgba(0,0,0,.16);margin:0 0 34px}
 .book{position:relative;flex-shrink:0;border-radius:2px 4px 4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:13px 0 10px;cursor:pointer;overflow:hidden;border:1px solid rgba(0,0,0,.18);box-shadow:inset -5px 0 9px rgba(0,0,0,.22),inset 3px 0 3px rgba(255,255,255,.1),2px 3px 8px rgba(0,0,0,.22);transition:transform .2s cubic-bezier(.2,.8,.2,1)}
 .book:hover{transform:translateY(-14px)}
