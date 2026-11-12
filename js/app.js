@@ -314,10 +314,11 @@ function renderShelf(filter=''){
   wrap.innerHTML=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
   $$('.book',wrap).forEach(el=>el.onclick=()=>openBook(books[+el.dataset.i]));
 }
-function openBook(b){const img=b.CoverURL&&b.CoverURL.trim();
+function coverSrc(b){let u=b&&b.CoverURL?String(b.CoverURL).trim():'';if(!u)return '';if(/^https?:\/\//i.test(u))return u;if(u.indexOf('/')>=0)return u;return 'assets/covers/'+u;}
+function openBook(b){const src=coverSrc(b);const img=!!src;
   openModal('small bookmodal',`<div class="mtop"><div class="traffic"><i class="close"></i><i></i><i></i></div><div class="mtitle">Bookshelf — ${esc(b.Title)}</div></div>
     <div class="bmgrid"><div><div class="bmcover ${img?'cimg':''}" ${img?`style="padding:0;overflow:hidden"`:''}>
-      ${img?`<img src="${esc(b.CoverURL)}" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1)">`:
+      ${img?`<img src="${esc(src)}" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1)">`:
         `<div class="bt" style="font-size:15px;font-weight:800">${esc(b.Title)}</div><div class="ba" style="font-size:11px;color:var(--ink-faint);text-transform:uppercase">${esc(b.Author||'')}</div>`}</div></div>
     <div><h2>${esc(b.Title)}</h2><div class="bmauth">${esc(b.Author||'')}</div>
       <div class="bmmeta"><span>${esc(b.Status||'Read')}</span>${b.Rating?`<span>★ ${esc(b.Rating)}/5</span>`:''}${b.Finished?`<span>Finished ${esc(b.Finished)}</span>`:''}</div>
@@ -347,7 +348,7 @@ async function enrichCovers(){
   // resolve + preload every cover so the detail modal renders instantly on open
   await Promise.all(books.map(async b=>{
     if(!b.CoverURL||!String(b.CoverURL).trim()){const c=await fetchCover(b);if(c)b.CoverURL=c;}
-    if(b.CoverURL){const im=new Image();im.src=String(b.CoverURL);}
+    const cs=coverSrc(b);if(cs){const im=new Image();im.src=cs;}
   }));
 }
 async function initBooks(){
