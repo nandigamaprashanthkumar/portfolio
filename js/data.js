@@ -5,6 +5,8 @@
 /* --- Google Sheets: paste your published-CSV links here ---
    In Google Sheets: File > Share > Publish to web > choose the
    tab > CSV. Paste that URL below. Leave "" to use sample data. */
+const LEADS_ENDPOINT = ""; // paste your Google Apps Script web-app URL here
+
 const SHEETS = {
   // LIVE — published-to-web CSV (edit the sheet, reload the site, it updates)
   learnings: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=835340019&single=true&output=csv",
@@ -110,7 +112,7 @@ const PROJECTS=[
 { id:"ea", name:"Trading EA", kind:"Tool", live:false, built:"2025 – ongoing", status:"Automation",
   blurb:"MetaTrader Expert Advisors — bots that trade a strategy automatically: they read the chart, follow strict rules, manage risk, and never get emotional.",
   report:{ image:"", note:"Placeholder — replace with your real MetaTrader Strategy Tester report.", stats:[["+0%","net return"],["0.0","profit factor"],["0%","win rate"],["0%","max drawdown"],["0","total trades"],["—","period"]] },
-  files:[ {name:"EA file (.ex5)", desc:"The compiled Expert Advisor for MetaTrader"}, {name:"Settings (.set)", desc:"Optimized input preset"} ],
+  files:[ {name:"EA file (.ex5)", desc:"The compiled Expert Advisor for MetaTrader", url:"assets/ea/ea.ex5"}, {name:"Settings (.set)", desc:"Optimized input preset", url:"assets/ea/settings.set"} ],
   glance:[["Rules","entry, exit & risk, automated"],["Backtested","before any real capital"],["24/5","watches so you don't"]],
   tech:["MQL5","MetaTrader","Backtesting","Risk management"],
   quote:{pre:"A good EA removes the one thing that loses money: ",mark:"a human at the keyboard.",by:"how it works"},

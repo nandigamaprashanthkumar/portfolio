@@ -463,3 +463,12 @@ html[data-theme="dark"] .mtop .traffic i.close{background:#555}
 .reqbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
 .reqbtn:hover{background:var(--sel);color:var(--sel-ink);border-color:var(--sel)}
 .reqall{margin-top:8px;background:var(--sel);color:var(--sel-ink);border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:13px;cursor:pointer}
+
+/* EA lead form */
+.leadform{display:flex;flex-direction:column;gap:10px;margin:6px 0 10px}
+.leadform input,.leadform textarea{border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-family:var(--font);font-size:14px;background:var(--card);color:var(--ink);outline:none}
+.leadform textarea{min-height:70px;resize:vertical}
+.lderr{color:#b00020;font-size:12px;font-weight:600;min-height:1em}
+html[data-theme="dark"] .lderr{color:#ff8a8a}
+.filelink{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--sel);background:var(--sel);color:var(--sel-ink);font-weight:700;font-size:13px;padding:11px 16px;border-radius:10px;text-decoration:none;margin:0 10px 10px 0}
+.filerow .lock{color:var(--ink-faint);font-size:15px}

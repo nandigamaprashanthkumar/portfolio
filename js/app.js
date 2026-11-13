@@ -121,19 +121,37 @@ function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.req
   const stats=(rp.stats||[]).map(s=>`<div class="rpstat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('');
   const img=rp.image?`<div class="rpimg"><img src="${esc(rp.image)}" alt="${esc(p.name)} backtest report" loading="lazy"></div>`:'<div class="rpimg empty">Backtest report image goes here</div>';
   const note=rp.note?`<p class="rpnote">${esc(rp.note)}</p>`:'';
-  const files=fl.map(f=>`<div class="filerow"><div><div class="fn">${esc(f.name)}</div><div class="fd">${esc(f.desc||'')}</div></div><button class="reqbtn" data-f="${esc(f.name)}">🔒 Request</button></div>`).join('');
+  const fileList=fl.map(f=>`<div class="filerow"><div><div class="fn">${esc(f.name)}</div><div class="fd">${esc(f.desc||'')}</div></div><span class="lock">\ud83d\udd12</span></div>`).join('');
+  const dlList=fl.map(f=>`<a class="filelink" href="${esc(f.url||'#')}" download>\u2b07 ${esc(f.name)}</a>`).join('');
   $('#mcontent').innerHTML=`<div class="readscroll">
     <div class="rsec">BACKTEST REPORT</div>
     ${stats?`<div class="rpstats">${stats}</div>`:''}
     ${img}${note}
-    <div class="rsec" style="margin-top:26px">THE FILES</div>
-    <p class="rpnote">🔒 Available on request. Send a short email about your use case and I'll share the files with you.</p>
-    ${files||'<p class="rpnote">Files coming soon.</p>'}
-    <button class="reqall">✉ Request all files</button>
+    <div class="rsec" style="margin-top:26px">GET THE FILES</div>
+    ${fileList}
+    <p class="rpnote">Enter your details to unlock the downloads. Your info stays private \u2014 it's saved only to my private sheet, never shown on the site.</p>
+    <div class="leadform" id="leadForm">
+      <input id="ldName" placeholder="Your name">
+      <input id="ldEmail" type="email" placeholder="Your email">
+      <textarea id="ldUse" placeholder="How do you plan to use it? (optional)"></textarea>
+      <button class="reqall" id="ldSubmit">\ud83d\udd13 Unlock downloads</button>
+      <div class="lderr" id="ldErr"></div>
+    </div>
+    <div class="leadlinks" id="leadLinks" style="display:none">
+      <p class="rpnote">\u2705 Thanks! Your downloads are ready:</p>${dlList}
+    </div>
   </div>`;
-  const mail=(subj)=>{location.href=`mailto:${em}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent('Hi Prashanth,\n\nI would like access to the '+p.name+' files. A bit about me / how I plan to use them:\n\n')}`;};
-  $$('.reqbtn',$('#mcontent')).forEach(b=>b.onclick=()=>mail('Request: '+p.name+' - '+b.dataset.f));
-  const ra=$('.reqall',$('#mcontent'));if(ra)ra.onclick=()=>mail('Request: '+p.name+' files');
+  const sub=$('#ldSubmit');if(sub)sub.onclick=()=>{
+    const name=$('#ldName').value.trim(),email=$('#ldEmail').value.trim(),use=$('#ldUse').value.trim();
+    if(!name||!/.+@.+\..+/.test(email)){$('#ldErr').textContent='Please enter your name and a valid email.';return;}
+    const payload={name:name,email:email,use:use,project:p.name};
+    if(typeof LEADS_ENDPOINT!=='undefined'&&LEADS_ENDPOINT){
+      try{fetch(LEADS_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});}catch(e){}
+    }else{
+      location.href=`mailto:${em}?subject=${encodeURIComponent('File request: '+p.name)}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nUse: '+use)}`;
+    }
+    $('#leadForm').style.display='none';$('#leadLinks').style.display='block';
+  };
 }
 function renderChat(){const p=current;$('#mcontent').innerHTML=`<div class="chatwrap"><div class="chatscroll" id="chatScroll">
   <div class="notechat">psst — I answer from my notes on ${p.name}, so ask me about the hard bits.</div>
