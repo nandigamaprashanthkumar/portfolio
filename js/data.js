@@ -5,7 +5,7 @@
 /* --- Google Sheets: paste your published-CSV links here ---
    In Google Sheets: File > Share > Publish to web > choose the
    tab > CSV. Paste that URL below. Leave "" to use sample data. */
-const LEADS_ENDPOINT = ""; // paste your Google Apps Script web-app URL here
+const LEADS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxug86iEPi-AUh0U4FD2XzYMCdFKVXsbDK0IqASMLXonNfpldnEjzHySX7ZEViU149l/exec"; // paste your Google Apps Script web-app URL here
 
 const SHEETS = {
   // LIVE — published-to-web CSV (edit the sheet, reload the site, it updates)
