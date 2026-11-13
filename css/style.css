@@ -488,3 +488,7 @@ html[data-theme="dark"] .lderr{color:#ff8a8a}
 .eafbody .filelink .dicon{font-size:14px;line-height:1.35}
 .eafbody .filelink .dtext{display:flex;flex-direction:column;gap:2px;text-align:left}
 .eafbody .filelink .fd{font-size:11px;font-weight:500;opacity:.85}
+
+/* simulated-report marker */
+.simbadge{display:inline-block;margin-left:8px;font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--card);background:var(--ink);padding:2px 7px;border-radius:5px;vertical-align:middle}
+.rpnote.warn{border:1px solid var(--line-strong);background:var(--bg2);border-radius:10px;padding:11px 13px;color:var(--ink-soft);margin-top:12px}

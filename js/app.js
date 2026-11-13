@@ -121,11 +121,11 @@ function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.req
   const pkg=p.pkg||(p.name+' files');const nfiles=fl.length+' file'+(fl.length===1?'':'s');
   const stats=(rp.stats||[]).map(s=>`<div class="rpstat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('');
   const img=rp.image?`<div class="rpimg"><img src="${esc(rp.image)}" alt="${esc(p.name)} backtest report" loading="lazy"></div>`:'<div class="rpimg empty">Backtest report image goes here</div>';
-  const note=rp.note?`<p class="rpnote">${esc(rp.note)}</p>`:'';
+  const note=rp.note?`<p class="rpnote${rp.sim?' warn':''}">${esc(rp.note)}</p>`:'';
   const fileList=fl.map(f=>`<div class="filerow"><div><div class="fn">${esc(f.name)}</div><div class="fd">${esc(f.desc||'')}</div></div><span class="lock">\ud83d\udd12</span></div>`).join('');
   const dlList=fl.map(f=>`<a class="filelink" href="${esc(f.url||'#')}" download><span class="dicon">\u2b07</span><span class="dtext"><span class="fn">${esc(f.name)}</span><span class="fd">${esc(f.desc||'')}</span></span></a>`).join('');
   $('#mcontent').innerHTML=`<div class="readscroll">
-    <div class="rsec">BACKTEST REPORT</div>
+    <div class="rsec">BACKTEST REPORT${rp.sim?' <span class="simbadge">SIMULATED</span>':''}</div>
     ${stats?`<div class="rpstats">${stats}</div>`:''}
     ${img}${note}
     <div class="rsec" style="margin-top:26px">FILES</div>
