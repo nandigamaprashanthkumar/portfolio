@@ -118,16 +118,19 @@ function setTab(t){curTab=t;const rb=$('#tabReport');if(rb)rb.classList.toggle('
   $('#mtitle').textContent=(t==='report'?'Results — ':t==='chat'?'Chat about ':'The story of ')+current.name;
   if(t==='report')renderReport();else if(t==='chat')renderChat();else renderRead();}
 function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.requestEmail||EMAIL);
+  const pkg=p.pkg||(p.name+' files');const nfiles=fl.length+' file'+(fl.length===1?'':'s');
   const stats=(rp.stats||[]).map(s=>`<div class="rpstat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('');
   const img=rp.image?`<div class="rpimg"><img src="${esc(rp.image)}" alt="${esc(p.name)} backtest report" loading="lazy"></div>`:'<div class="rpimg empty">Backtest report image goes here</div>';
   const note=rp.note?`<p class="rpnote">${esc(rp.note)}</p>`:'';
   const fileList=fl.map(f=>`<div class="filerow"><div><div class="fn">${esc(f.name)}</div><div class="fd">${esc(f.desc||'')}</div></div><span class="lock">\ud83d\udd12</span></div>`).join('');
-  const dlList=fl.map(f=>`<a class="filelink" href="${esc(f.url||'#')}" download>\u2b07 ${esc(f.name)}</a>`).join('');
+  const dlList=fl.map(f=>`<a class="filelink" href="${esc(f.url||'#')}" download><span class="dicon">\u2b07</span><span class="dtext"><span class="fn">${esc(f.name)}</span><span class="fd">${esc(f.desc||'')}</span></span></a>`).join('');
   $('#mcontent').innerHTML=`<div class="readscroll">
     <div class="rsec">BACKTEST REPORT</div>
     ${stats?`<div class="rpstats">${stats}</div>`:''}
     ${img}${note}
-    <div class="rsec" style="margin-top:26px">GET THE FILES</div>
+    <div class="rsec" style="margin-top:26px">FILES</div>
+    <div class="eafolder" id="eaFolder"><div class="eafhead"><span class="eafic">${folderSVG}</span><div class="eafhmeta"><div class="eafname">${esc(pkg)}</div><div class="eafsub" id="eafSub">${nfiles} \u00b7 locked</div></div><span class="lock" id="eafLock">\ud83d\udd12</span></div>
+    <div class="eafbody"><div id="leadWrap">
     ${fileList}
     <p class="rpnote">Enter your details to unlock the downloads. Your info stays private \u2014 it's saved only to my private sheet, never shown on the site.</p>
     <div class="leadform" id="leadForm">
@@ -136,10 +139,10 @@ function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.req
       <textarea id="ldUse" placeholder="How do you plan to use it? (optional)"></textarea>
       <button class="reqall" id="ldSubmit">\ud83d\udd13 Unlock downloads</button>
       <div class="lderr" id="ldErr"></div>
-    </div>
+    </div></div>
     <div class="leadlinks" id="leadLinks" style="display:none">
-      <p class="rpnote">\u2705 Thanks! Your downloads are ready:</p>${dlList}
-    </div>
+      <p class="rpnote">\u2705 Unlocked \u2014 your files:</p>${dlList}
+    </div></div></div>
   </div>`;
   const sub=$('#ldSubmit');if(sub)sub.onclick=()=>{
     const name=$('#ldName').value.trim(),email=$('#ldEmail').value.trim(),use=$('#ldUse').value.trim();
@@ -150,7 +153,11 @@ function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.req
     }else{
       location.href=`mailto:${em}?subject=${encodeURIComponent('File request: '+p.name)}&body=${encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nUse: '+use)}`;
     }
-    $('#leadForm').style.display='none';$('#leadLinks').style.display='block';
+    const fd=$('#eaFolder');if(fd)fd.classList.add('open');
+    const lw=$('#leadWrap');if(lw)lw.style.display='none';
+    const sb=$('#eafSub');if(sb)sb.textContent=nfiles+' \u00b7 unlocked';
+    const lk=$('#eafLock');if(lk)lk.textContent='\ud83d\udd13';
+    $('#leadLinks').style.display='block';
   };
 }
 function renderChat(){const p=current;$('#mcontent').innerHTML=`<div class="chatwrap"><div class="chatscroll" id="chatScroll">
