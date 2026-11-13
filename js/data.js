@@ -109,6 +109,8 @@ const PROJECTS=[
   qa:{"What's the stack?":"React on the front, Node on the back, TradingView for charts, and market data APIs feeding live prices and indicators.","Where does the data come from?":"Market data providers over their APIs. I cache sensibly and back off on rate limits so a busy session doesn't get throttled.","How do custom screeners work?":"You define the rules — momentum, value, volume, whatever — and the screener filters the universe against them live, instead of giving you a fixed preset list.","Is it real-time?":"Prices stream in and the UI batches updates so it stays smooth. 'Real-time' is only as good as the feed, but it's built to keep up with an active session."}},
 { id:"ea", name:"Trading EA", kind:"Tool", live:false, built:"2025 – ongoing", status:"Automation",
   blurb:"MetaTrader Expert Advisors — bots that trade a strategy automatically: they read the chart, follow strict rules, manage risk, and never get emotional.",
+  report:{ image:"", note:"Placeholder — replace with your real MetaTrader Strategy Tester report.", stats:[["+0%","net return"],["0.0","profit factor"],["0%","win rate"],["0%","max drawdown"],["0","total trades"],["—","period"]] },
+  files:[ {name:"EA file (.ex5)", desc:"The compiled Expert Advisor for MetaTrader"}, {name:"Settings (.set)", desc:"Optimized input preset"} ],
   glance:[["Rules","entry, exit & risk, automated"],["Backtested","before any real capital"],["24/5","watches so you don't"]],
   tech:["MQL5","MetaTrader","Backtesting","Risk management"],
   quote:{pre:"A good EA removes the one thing that loses money: ",mark:"a human at the keyboard.",by:"how it works"},

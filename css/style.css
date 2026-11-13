@@ -447,3 +447,19 @@ html[data-theme="dark"] .mtop .traffic i.close{background:#555}
   body.cur-down #curRing{width:26px;height:26px;margin:-13px 0 0 -13px}
 }
 @media(pointer:coarse){#curDot,#curRing{display:none}}
+
+/* EA report tab */
+.rpstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:4px 0 18px}
+.rpstat{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg2)}
+.rpstat b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em}
+.rpstat span{font-size:11px;color:var(--ink-faint);font-weight:600}
+.rpimg{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg2)}
+.rpimg img{width:100%;display:block}
+.rpimg.empty{padding:42px;text-align:center;color:var(--ink-faint);font-size:13px;border-style:dashed}
+.rpnote{font-size:13px;color:var(--ink-soft);line-height:1.55;margin:10px 0 14px}
+.filerow{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.filerow .fn{font-weight:700;font-size:14px}
+.filerow .fd{font-size:12px;color:var(--ink-faint);margin-top:2px}
+.reqbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.reqbtn:hover{background:var(--sel);color:var(--sel-ink);border-color:var(--sel)}
+.reqall{margin-top:8px;background:var(--sel);color:var(--sel-ink);border:none;border-radius:10px;padding:11px 18px;font-weight:700;font-size:13px;cursor:pointer}

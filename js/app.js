@@ -101,19 +101,40 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 /* ---------------- PROJECT MODAL ---------------- */
 let current=null,curTab='chat';
 function openProject(id){current=PROJECTS.find(p=>p.id===id);curTab='chat';
+  const hasRep=current&&current.report;const repBtn=hasRep?'<button id="tabReport">📊 Report</button>':'';
   openModal('',`<div class="mtop"><div class="traffic"><i class="close"></i><i></i><i></i></div>
     <div class="mtitle" id="mtitle"></div>
-    <div class="toggle"><button id="tabChat" class="on">💬 Chat</button><button id="tabRead">📖 Read</button></div></div>
+    <div class="toggle">${repBtn}<button id="tabChat">💬 Chat</button><button id="tabRead">📖 Read</button></div></div>
     <div class="mmain"><div class="mside" id="mside"></div><div class="mcontent" id="mcontent"></div></div>`);
+  if(hasRep)$('#tabReport').onclick=()=>setTab('report');
   $('#tabChat').onclick=()=>setTab('chat');$('#tabRead').onclick=()=>setTab('read');
-  renderSide();setTab('chat');}
+  renderSide();setTab(hasRep?'report':'chat');}
 function renderSide(){const p=current;$('#mside').innerHTML=`<div class="fi">${folderSVG}</div><h3>${p.name}</h3>
   <div class="st"><span class="kdot ${p.live?'filled':''}" style="width:8px;height:8px"></span>${p.status} · ${p.built}</div>
   <div class="glabel2">AT A GLANCE</div>${p.glance.map(g=>`<div class="glance-row"><b>${g[0]}</b><span>${g[1]}</span></div>`).join('')}
   <div class="glabel2">OPEN WITH</div><div class="openwith"><a class="primary" href="#">See it ↗</a><a href="#">Source / files ↗</a></div>`;}
-function setTab(t){curTab=t;$('#tabChat').classList.toggle('on',t==='chat');$('#tabRead').classList.toggle('on',t==='read');
-  $('#mtitle').textContent=(t==='chat'?'Chat about ':'The story of ')+current.name;
-  if(t==='chat')renderChat();else renderRead();}
+function setTab(t){curTab=t;const rb=$('#tabReport');if(rb)rb.classList.toggle('on',t==='report');
+  $('#tabChat').classList.toggle('on',t==='chat');$('#tabRead').classList.toggle('on',t==='read');
+  $('#mtitle').textContent=(t==='report'?'Results — ':t==='chat'?'Chat about ':'The story of ')+current.name;
+  if(t==='report')renderReport();else if(t==='chat')renderChat();else renderRead();}
+function renderReport(){const p=current,rp=p.report||{},fl=p.files||[],em=(p.requestEmail||EMAIL);
+  const stats=(rp.stats||[]).map(s=>`<div class="rpstat"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('');
+  const img=rp.image?`<div class="rpimg"><img src="${esc(rp.image)}" alt="${esc(p.name)} backtest report" loading="lazy"></div>`:'<div class="rpimg empty">Backtest report image goes here</div>';
+  const note=rp.note?`<p class="rpnote">${esc(rp.note)}</p>`:'';
+  const files=fl.map(f=>`<div class="filerow"><div><div class="fn">${esc(f.name)}</div><div class="fd">${esc(f.desc||'')}</div></div><button class="reqbtn" data-f="${esc(f.name)}">🔒 Request</button></div>`).join('');
+  $('#mcontent').innerHTML=`<div class="readscroll">
+    <div class="rsec">BACKTEST REPORT</div>
+    ${stats?`<div class="rpstats">${stats}</div>`:''}
+    ${img}${note}
+    <div class="rsec" style="margin-top:26px">THE FILES</div>
+    <p class="rpnote">🔒 Available on request. Send a short email about your use case and I'll share the files with you.</p>
+    ${files||'<p class="rpnote">Files coming soon.</p>'}
+    <button class="reqall">✉ Request all files</button>
+  </div>`;
+  const mail=(subj)=>{location.href=`mailto:${em}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent('Hi Prashanth,\n\nI would like access to the '+p.name+' files. A bit about me / how I plan to use them:\n\n')}`;};
+  $$('.reqbtn',$('#mcontent')).forEach(b=>b.onclick=()=>mail('Request: '+p.name+' - '+b.dataset.f));
+  const ra=$('.reqall',$('#mcontent'));if(ra)ra.onclick=()=>mail('Request: '+p.name+' files');
+}
 function renderChat(){const p=current;$('#mcontent').innerHTML=`<div class="chatwrap"><div class="chatscroll" id="chatScroll">
   <div class="notechat">psst — I answer from my notes on ${p.name}, so ask me about the hard bits.</div>
   <div class="msg bot">hey 👋 you opened ${p.name}</div><div class="msg bot">${p.blurb}</div>
