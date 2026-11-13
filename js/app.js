@@ -180,13 +180,13 @@ function answer(q){const sc=$('#chatScroll');if(!sc)return;const me=document.cre
     const text=matchAnswer(q),wds=text.split(' ');let i=0;
     const stream=setInterval(()=>{bot.textContent=wds.slice(0,++i).join(' ');scrollChat();
       if(i>=wds.length){clearInterval(stream);renderSuggest(current.asks.filter(a=>a!==q).sort(()=>Math.random()-.5).slice(0,2));scrollChat();}},34);},dt*650);}
-function renderRead(){const p=current;$('#mcontent').innerHTML=`<div class="readscroll"><h1>${p.name}</h1><p class="lede">${p.blurb}</p>
+function renderRead(){const p=current;const off=p.inputs?1:0;const pad=n=>(n<10?'0':'')+n;$('#mcontent').innerHTML=`<div class="readscroll"><h1>${p.name}</h1><p class="lede">${p.blurb}</p>
   <div class="tags">${p.tech.map(t=>`<span>${t}</span>`).join('')}</div>
   <div class="pull"><div class="q">“${p.quote.pre}<mark>${p.quote.mark}</mark>”</div><div class="by">— ${p.quote.by}</div></div>
   <div class="rsec">01 · HOW IT FLOWS</div>${p.flows.map((f,i)=>`<div class="flowrow"><div class="l"><span class="n">${i+1}</span>${f[0]}</div><div class="r">${f[1]}</div></div>`).join('')}
-  <div class="rsec">02 · THE FUN PART</div>${p.fun.map((f,i)=>`<div class="funcard"><div class="ft"><b>${f[0]}</b><span>${i+1}/${p.fun.length}</span></div><p>${f[1]}</p><code>${f[2]}</code></div>`).join('')}
-  <div class="rsec">03 · WHAT BROKE</div>${p.broke.map(b=>`<div class="brokerow">⚠ ${b}</div>`).join('')}
-  <div class="rsec">04 · THINGS PEOPLE ASK</div>${p.asks.map(a=>`<div class="askrow" data-q="${esc(a)}">› ${a}</div>`).join('')}</div>`;
+  ${p.inputs?`<div class="rsec">02 · THE DIALS</div><div class="inputs"><div class="inrow inhead"><span>Input</span><span>Default</span><span>What it controls</span></div>${p.inputs.map(x=>`<div class="inrow"><span><code>${esc(x[0])}</code></span><span>${esc(x[1])}</span><span>${esc(x[2])}</span></div>`).join('')}</div>`:''}<div class="rsec">${pad(2+off)} · THE FUN PART</div>${p.fun.map((f,i)=>`<div class="funcard"><div class="ft"><b>${f[0]}</b><span>${i+1}/${p.fun.length}</span></div><p>${f[1]}</p><code>${f[2]}</code></div>`).join('')}
+  <div class="rsec">${pad(3+off)} · WHAT BROKE</div>${p.broke.map(b=>`<div class="brokerow">⚠ ${b}</div>`).join('')}
+  <div class="rsec">${pad(4+off)} · THINGS PEOPLE ASK</div>${p.asks.map(a=>`<div class="askrow" data-q="${esc(a)}">› ${a}</div>`).join('')}</div>`;
   $$('.askrow',$('#mcontent')).forEach(el=>el.onclick=()=>{setTab('chat');setTimeout(()=>answer(el.dataset.q),200);});}
 
 /* ==========================================================
