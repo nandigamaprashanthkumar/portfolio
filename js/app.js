@@ -250,16 +250,31 @@ function renderNewspaper(){
   if(mb)mb.onclick=()=>{const c=el.querySelector('#npCards');const ex=c.classList.toggle('expanded');mb.textContent=ex?'Show fewer':('Show more stories ('+extra+')');};
 }
 function esc2(x){return esc(x==null?'':String(x));}
-function artBlocks(a){
-  var b=['<div class="rdkick">'+esc2(a.kicker)+'</div><h1 class="rdtitle">'+esc2(a.title)+'</h1><div class="rdby"><span class="rddot"></span>By Nandigama Prashanth Kumar<span class="rdsep">·</span>'+esc2(a.date)+'<span class="rdsep">·</span>'+esc2(a.read)+' read</div>'+(a.pull?'<p class="rdstand">'+esc2(a.pull)+'</p>':'')+'<div class="rdrule"></div>'];
-  (a.body||[]).forEach(function(p,i){b.push('<p'+(i===0?' class="dropcap"':'')+'>'+esc2(p)+'</p>');});
-  if(a.tags&&a.tags.length)b.push('<div class="rdtags">'+a.tags.map(function(t){return '<span>#'+esc2(t)+'</span>';}).join('')+'</div>');
-  return b;
+function artHeaderHTML(a){
+  return '<div class="rdkick">'+esc2(a.kicker||'ARTICLE')+'</div><h1 class="rdtitle">'+esc2(a.title)+'</h1><div class="rdby"><span class="rddot"></span>By Nandigama Prashanth Kumar<span class="rdsep">·</span>'+esc2(a.date)+'<span class="rdsep">·</span>'+esc2(a.read)+(a.read?' read':'')+'</div>'+(a.pull?'<p class="rdstand">'+esc2(a.pull)+'</p>':'')+'<div class="rdrule"></div>';
+}
+function artTagsHTML(a){
+  var tg=(a.tags&&a.tags.length)?'<div class="rdtags">'+a.tags.map(function(t){return '<span>#'+esc2(t)+'</span>';}).join('')+'</div>':'';
+  var ln=a.link?'<p class="rdorig"><a href="'+esc2(a.link)+'" target="_blank" rel="noopener">Read the original ↗</a></p>':'';
+  return tg+ln;
 }
 function paginate(a,pad,avail){
-  var blocks=artBlocks(a),pages=[],cur='';
-  for(var i=0;i<blocks.length;i++){var h=blocks[i];pad.innerHTML=cur+h;if(pad.offsetHeight>avail&&cur){pages.push(cur);cur=h;}else{cur+=h;}}
-  if(cur)pages.push(cur);return pages.length?pages:[''];
+  function fits(html){pad.innerHTML=html;return pad.offsetHeight<=avail;}
+  var pages=[],cur=artHeaderHTML(a),body=a.body||[];
+  for(var p=0;p<body.length;p++){
+    var words=String(body[p]).split(/\s+/).filter(Boolean),cls=(p===0?' class="dropcap"':''),acc='';
+    for(var w=0;w<words.length;w++){
+      var trial=acc?acc+' '+words[w]:words[w];
+      if(fits(cur+'<p'+cls+'>'+esc2(trial)+'</p>')){acc=trial;}
+      else if(acc){cur+='<p'+cls+'>'+esc2(acc)+'</p>';pages.push(cur);cur='';acc=words[w];cls='';}
+      else{cur+='<p'+cls+'>'+esc2(words[w])+'</p>';pages.push(cur);cur='';acc='';cls='';}
+    }
+    if(acc)cur+='<p'+cls+'>'+esc2(acc)+'</p>';
+  }
+  var tg=artTagsHTML(a);
+  if(tg){if(cur&&!fits(cur+tg)){pages.push(cur);cur='';}cur+=tg;}
+  if(cur)pages.push(cur);
+  return pages.length?pages:[''];
 }
 function openArticles(start){
   var ai=Number.isInteger(start)?start:0,pi=0,pages=[],busy=false;
@@ -358,6 +373,23 @@ async function initNewsletter(){
   }
 }
 $('#caroPrev').onclick=()=>nudge(-1);$('#caroNext').onclick=()=>nudge(1);
+async function initArticles(){
+  try{
+    var r=await loadSheet(SHEETS.articles,null);
+    if(!(r.data&&r.data.length))return;
+    var list=r.data.map(function(x){return {
+      kicker:(x.Kicker||x.kicker||'ARTICLE'),
+      title:(x.Title||x.title||''),
+      date:(x.Date||x.date||''),
+      read:(x.Read||x.read||''),
+      pull:(x.Pull||x.pull||x.Standfirst||x.standfirst||''),
+      body:String(x.Body||x.body||'').split(/\n+/).map(function(s){return s.trim();}).filter(Boolean),
+      tags:String(x.Tags||x.tags||'').split(',').map(function(s){return s.trim();}).filter(Boolean),
+      link:(x.Link||x.link||'')
+    };}).filter(function(a){return a.title;});
+    if(list.length){ARTICLES.length=0;list.forEach(function(a){ARTICLES.push(a);});renderNewspaper();}
+  }catch(e){}
+}
 function nudge(dir){track.classList.add('paused');const cur=getComputedStyle(track).transform;
   const x=(new DOMMatrix(cur)).m41;track.style.transition='transform .4s';track.style.transform=`translateX(${x-dir*348}px)`;
   setTimeout(()=>{track.style.transition='';},420);}
@@ -491,7 +523,7 @@ window.addEventListener('resize',()=>{clearTimeout(window.__srt);window.__srt=se
    then asynchronously upgrade to live Google Sheet data. */
 books=SAMPLE_BOOKS;try{renderShelf();}catch(e){console.error('shelf',e);}
 learnData=SAMPLE_LEARNINGS;podData=SAMPLE_PODCASTS;try{renderLearnTab();}catch(e){console.error('learn',e);}
-initLearnings();initBooks();initNewsletter();try{renderNewspaper();}catch(e){console.error('news',e);}
+initLearnings();initBooks();initNewsletter();try{renderNewspaper();}catch(e){console.error('news',e);}initArticles();
 
 /* ---------------- CUSTOM FOLLOWER CURSOR ---------------- */
 (function(){

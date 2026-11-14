@@ -662,3 +662,8 @@ html[data-theme="dark"]{--paper:#17171a;--paper-ink:#ece9e1;--paper-line:#2e2e34
 .bnav{font-family:var(--font);font-weight:800;font-size:13px;background:var(--card);border:1px solid var(--line-strong);border-radius:20px;padding:8px 16px;cursor:pointer;color:var(--ink)}
 .bnav:hover{background:var(--bg2)}
 .bno{font-family:var(--font);font-size:12px;font-weight:600;color:var(--ink-soft);text-align:center;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+/* read-original link inside the paper reader */
+.rdorig{margin-top:18px}
+.rdorig a{font-family:var(--font);font-size:13px;font-weight:800;color:var(--paper-ink);border-bottom:2px solid var(--paper-ink);text-decoration:none}
+.rdorig a:hover{opacity:.7}

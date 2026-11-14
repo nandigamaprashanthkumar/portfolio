@@ -12,7 +12,8 @@ const SHEETS = {
   learnings: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=835340019&single=true&output=csv",
   podcasts:  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=756348010&single=true&output=csv",
   books:     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=0&single=true&output=csv",
-  newsletter: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=1650676482&single=true&output=csv"
+  newsletter: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxlDJRw9gDl8qbdaXkh3jZi0jRh1g_QW6IBmMYS01MhP36TZveN-QtJr3fhgOv1sBMld2kIXeZ3o7B/pub?gid=1650676482&single=true&output=csv",
+  articles:  "https://docs.google.com/spreadsheets/d/1CLtONoVAuozDXCJLA7dHOBPvi1rlo3rbanlZ_PnAuRM/gviz/tq?tqx=out:csv&sheet=Articles"
 };
 
 /* --- Newsletter (LinkedIn) carousel --- */
