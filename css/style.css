@@ -609,3 +609,10 @@ html[data-theme="dark"] .lderr{color:#ff8a8a}
 @keyframes unfoldB{0%{transform:rotateX(0)}100%{transform:rotateX(120deg)}}
 html[data-theme="dark"] .rdflap.t{box-shadow:inset 0 -3px 9px rgba(0,0,0,.45)}
 html[data-theme="dark"] .rdflap.b{box-shadow:inset 0 3px 9px rgba(0,0,0,.45)}
+
+/* stronger fold shading so the crease + paper read clearly */
+.rdflap.t{background:linear-gradient(to top,rgba(0,0,0,.17),rgba(0,0,0,0) 38%),var(--card);box-shadow:0 14px 28px rgba(0,0,0,.17)}
+.rdflap.b{background:linear-gradient(to bottom,rgba(0,0,0,.17),rgba(0,0,0,0) 38%),var(--card);box-shadow:0 -14px 28px rgba(0,0,0,.17)}
+.rdcover::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;transform:translateY(-.5px);background:rgba(0,0,0,.25);z-index:2;animation:creaseFade .95s ease forwards}
+@keyframes creaseFade{0%,55%{opacity:1}100%{opacity:0}}
+html[data-theme="dark"] .rdcover::after{background:rgba(255,255,255,.18)}
