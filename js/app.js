@@ -263,26 +263,26 @@ function paginate(a,pad){
 }
 function openArticles(start){
   var ai=Number.isInteger(start)?start:0,pi=0,pages=[],busy=false;
-  openModal('reader','<div class="paperreader"><button class="rdx" id="rdX" aria-label="Close">✕</button><div class="bookstage" id="bookStage"><div class="sheet base" id="sheetBase"></div><div class="sheet measure" id="sheetMeasure"><div class="sheetpad" id="measPad"></div></div></div><div class="bookfoot"><button class="bnav" id="bPrev">‹ Prev</button><div class="bno" id="bNo"></div><button class="bnav" id="bNext">Next ›</button></div></div>');
-  var stage=$('#bookStage'),base=$('#sheetBase'),bno=$('#bNo'),measPad=$('#measPad');
+  openModal('reader','<div class="paperreader"><button class="rdx" id="rdX" aria-label="Close">✕</button><div class="bookstage" id="bookStage"><div class="sheet base" id="sheetBase"></div></div><div class="bookfoot"><button class="bnav" id="bPrev">‹ Prev</button><div class="bno" id="bNo"></div><button class="bnav" id="bNext">Next ›</button></div></div>');
+  var stage=$('#bookStage'),base=$('#sheetBase'),bno=$('#bNo');function pagesFor(a){var tmp=document.createElement('div');tmp.className='sheet';tmp.style.visibility='hidden';tmp.innerHTML='<div class="sheetpad" id="__m"></div>';stage.appendChild(tmp);var r=paginate(a,tmp.querySelector('#__m'));tmp.remove();return r;}
   function sheetInner(html,n,total){return '<div class="sheetpad">'+html+'<div class="pageno">'+n+' / '+total+'</div></div>';}
   function paint(){base.innerHTML=sheetInner(pages[pi],pi+1,pages.length);bno.textContent=ARTICLES[ai].title+'  —  page '+(pi+1)+' of '+pages.length;}
   function next(){
     if(busy)return;busy=true;
     var ov=document.createElement('div');ov.className='sheet turning next';ov.innerHTML=base.innerHTML;stage.appendChild(ov);
-    if(pi<pages.length-1){pi++;}else{ai=(ai+1)%ARTICLES.length;pages=paginate(ARTICLES[ai],measPad);pi=0;}
+    if(pi<pages.length-1){pi++;}else{ai=(ai+1)%ARTICLES.length;pages=pagesFor(ARTICLES[ai]);pi=0;}
     paint();ov.addEventListener('animationend',function(){ov.remove();busy=false;},{once:true});
   }
   function prev(){
     if(busy)return;busy=true;
     var da=ai,dpages=pages,dpi;
-    if(pi>0){dpi=pi-1;}else{da=(ai-1+ARTICLES.length)%ARTICLES.length;dpages=paginate(ARTICLES[da],measPad);dpi=dpages.length-1;}
+    if(pi>0){dpi=pi-1;}else{da=(ai-1+ARTICLES.length)%ARTICLES.length;dpages=pagesFor(ARTICLES[da]);dpi=dpages.length-1;}
     var ov=document.createElement('div');ov.className='sheet turning prev';ov.innerHTML=sheetInner(dpages[dpi],dpi+1,dpages.length);stage.appendChild(ov);
     ov.addEventListener('animationend',function(){ai=da;pages=dpages;pi=dpi;paint();ov.remove();busy=false;},{once:true});
   }
   $('#rdX').onclick=closeModal;$('#bNext').onclick=next;$('#bPrev').onclick=prev;
   base.onclick=function(e){var r=base.getBoundingClientRect();((e.clientX-r.left)>r.width/2?next:prev)();};
-  requestAnimationFrame(function(){pages=paginate(ARTICLES[ai],measPad);pi=0;paint();});
+  requestAnimationFrame(function(){pages=pagesFor(ARTICLES[ai]);pi=0;paint();});
 }
 
 /* ==========================================================
