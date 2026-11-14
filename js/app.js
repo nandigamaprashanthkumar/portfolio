@@ -249,36 +249,40 @@ function renderNewspaper(){
   const mb=el.querySelector('#npMore');
   if(mb)mb.onclick=()=>{const c=el.querySelector('#npCards');const ex=c.classList.toggle('expanded');mb.textContent=ex?'Show fewer':('Show more stories ('+extra+')');};
 }
-function articleHTML(a){
-  const body=(a.body||[]).map((p,i)=>`<p${i===0?' class="dropcap"':''}>${esc(p)}</p>`).join('');
-  return `<div class="rdkick">${esc(a.kicker||'')}</div><h1 class="rdtitle">${esc(a.title||'')}</h1>
-    <div class="rdby"><span class="rddot"></span>By Nandigama Prashanth Kumar<span class="rdsep">·</span>${esc(a.date||'')}<span class="rdsep">·</span>${esc(a.read||'')} read</div>
-    ${a.pull?`<p class="rdstand">${esc(a.pull)}</p>`:''}
-    <div class="rdrule"></div>
-    ${body}
-    ${(a.tags&&a.tags.length)?`<div class="rdtags">${a.tags.map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`:''}`;
+function esc2(x){return esc(x==null?'':String(x));}
+function artBlocks(a){
+  var b=['<div class="rdkick">'+esc2(a.kicker)+'</div><h1 class="rdtitle">'+esc2(a.title)+'</h1><div class="rdby"><span class="rddot"></span>By Nandigama Prashanth Kumar<span class="rdsep">·</span>'+esc2(a.date)+'<span class="rdsep">·</span>'+esc2(a.read)+' read</div>'+(a.pull?'<p class="rdstand">'+esc2(a.pull)+'</p>':'')+'<div class="rdrule"></div>'];
+  (a.body||[]).forEach(function(p,i){b.push('<p'+(i===0?' class="dropcap"':'')+'>'+esc2(p)+'</p>');});
+  if(a.tags&&a.tags.length)b.push('<div class="rdtags">'+a.tags.map(function(t){return '<span>#'+esc2(t)+'</span>';}).join('')+'</div>');
+  return b;
+}
+function paginate(a,pad){
+  var blocks=artBlocks(a),maxH=pad.clientHeight-40,pages=[],cur='';
+  for(var i=0;i<blocks.length;i++){var h=blocks[i];pad.innerHTML=cur+h;if(pad.scrollHeight>maxH&&cur){pages.push(cur);cur=h;}else{cur+=h;}}
+  if(cur)pages.push(cur);pad.innerHTML='';return pages.length?pages:[''];
 }
 function openArticles(start){
-  let i=Number.isInteger(start)?start:0;
-  openModal('reader',`<div class="reader"><div class="rdbar"><div class="rdprog" id="rdProg"></div></div>
-    <button class="rdx" id="rdX" aria-label="Close">✕</button>
-    <div class="rdscroll" id="rdScroll"><article class="rdpage" id="rdPage"></article>
-      <div class="rdnav" id="rdNav"></div></div><div class="rdcover" id="rdCover"><div class="rdflap t"></div><div class="rdflap b"></div></div></div>`);
-  const scroll=$('#rdScroll'),page=$('#rdPage'),prog=$('#rdProg'),nav=$('#rdNav');
-  function render(n){
-    i=(n+ARTICLES.length)%ARTICLES.length;const a=ARTICLES[i];
-    page.innerHTML=articleHTML(a);
-    const prev=ARTICLES[(i-1+ARTICLES.length)%ARTICLES.length],next=ARTICLES[(i+1)%ARTICLES.length];
-    nav.innerHTML=`<button class="rdprev"><small>← Previous</small>${esc(prev.title)}</button><button class="rdnext"><small>Next →</small>${esc(next.title)}</button>`;
-    nav.querySelector('.rdprev').onclick=()=>render(i-1);
-    nav.querySelector('.rdnext').onclick=()=>render(i+1);
-    page.classList.remove('in');void page.offsetWidth;page.classList.add('in');
-    scroll.scrollTop=0;prog.style.width='0%';
+  var ai=Number.isInteger(start)?start:0,pi=0,pages=[],busy=false;
+  openModal('reader','<div class="paperreader"><button class="rdx" id="rdX" aria-label="Close">✕</button><div class="bookstage" id="bookStage"><div class="sheet base" id="sheetBase"></div><div class="sheet measure" id="sheetMeasure"><div class="sheetpad" id="measPad"></div></div></div><div class="bookfoot"><button class="bnav" id="bPrev">‹ Prev</button><div class="bno" id="bNo"></div><button class="bnav" id="bNext">Next ›</button></div></div>');
+  var stage=$('#bookStage'),base=$('#sheetBase'),bno=$('#bNo'),measPad=$('#measPad');
+  function sheetInner(html,n,total){return '<div class="sheetpad">'+html+'<div class="pageno">'+n+' / '+total+'</div></div>';}
+  function paint(){base.innerHTML=sheetInner(pages[pi],pi+1,pages.length);bno.textContent=ARTICLES[ai].title+'  —  page '+(pi+1)+' of '+pages.length;}
+  function next(){
+    if(busy)return;busy=true;
+    var ov=document.createElement('div');ov.className='sheet turning next';ov.innerHTML=base.innerHTML;stage.appendChild(ov);
+    if(pi<pages.length-1){pi++;}else{ai=(ai+1)%ARTICLES.length;pages=paginate(ARTICLES[ai],measPad);pi=0;}
+    paint();ov.addEventListener('animationend',function(){ov.remove();busy=false;},{once:true});
   }
-  scroll.onscroll=()=>{const h=scroll.scrollHeight-scroll.clientHeight;prog.style.width=(h>0?Math.min(100,scroll.scrollTop/h*100):0)+'%';};
-  $('#rdX').onclick=closeModal;
-  render(i);
-  setTimeout(function(){var c=document.getElementById('rdCover');if(c)c.style.display='none';},1000);
+  function prev(){
+    if(busy)return;busy=true;
+    var da=ai,dpages=pages,dpi;
+    if(pi>0){dpi=pi-1;}else{da=(ai-1+ARTICLES.length)%ARTICLES.length;dpages=paginate(ARTICLES[da],measPad);dpi=dpages.length-1;}
+    var ov=document.createElement('div');ov.className='sheet turning prev';ov.innerHTML=sheetInner(dpages[dpi],dpi+1,dpages.length);stage.appendChild(ov);
+    ov.addEventListener('animationend',function(){ai=da;pages=dpages;pi=dpi;paint();ov.remove();busy=false;},{once:true});
+  }
+  $('#rdX').onclick=closeModal;$('#bNext').onclick=next;$('#bPrev').onclick=prev;
+  base.onclick=function(e){var r=base.getBoundingClientRect();((e.clientX-r.left)>r.width/2?next:prev)();};
+  requestAnimationFrame(function(){pages=paginate(ARTICLES[ai],measPad);pi=0;paint();});
 }
 
 /* ==========================================================
