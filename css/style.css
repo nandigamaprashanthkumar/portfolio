@@ -501,3 +501,45 @@ html[data-theme="dark"] .lderr{color:#ff8a8a}
 .inrow code{font-size:12px}
 .inrow span:nth-child(3){color:var(--ink-soft)}
 @media(max-width:640px){.inrow{grid-template-columns:1fr 60px;gap:6px}.inrow span:nth-child(3){grid-column:1/3;color:var(--ink-faint);font-size:12px}}
+
+/* ===================== ARTICLES — NEWSPAPER ===================== */
+#articles .npwrap{margin-top:10px}
+.newspaper{position:relative;background:var(--card);border:1px solid var(--line-strong);border-radius:4px;padding:30px 34px 34px;box-shadow:var(--shadow);font-family:Georgia,"Times New Roman",serif;color:var(--ink)}
+.newspaper::before,.newspaper::after{content:"";position:absolute;inset:0;background:var(--card);border:1px solid var(--line);border-radius:4px;z-index:-1}
+.newspaper::before{transform:rotate(-1.3deg) translateY(7px)}
+.newspaper::after{transform:rotate(1deg) translateY(12px);z-index:-2;opacity:.55}
+.npmast{text-align:center;border-bottom:3px double var(--ink);padding-bottom:12px}
+.npname{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,6vw,58px);font-weight:900;letter-spacing:-.01em;line-height:1;margin:7px 0;text-transform:uppercase}
+.npmline{font-family:var(--font);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.npstrip{overflow:hidden;border-bottom:1px solid var(--ink);padding:7px 0;margin-bottom:20px;white-space:nowrap;text-overflow:clip}
+.npstrip span{font-family:var(--font);font-size:10px;font-weight:800;letter-spacing:.3em;color:var(--ink-faint)}
+.nplead{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:start}
+.npfig{border:1px solid var(--line-strong);padding:12px;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;color:var(--ink)}
+.npfig svg{width:100%;height:100%;opacity:.9}
+.npkick{font-family:var(--font);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+.nphead{font-size:clamp(24px,3.4vw,38px);font-weight:900;line-height:1.04;letter-spacing:-.01em;cursor:pointer;margin:0 0 7px}
+.nphead:hover{text-decoration:underline}
+.npby{font-size:12px;font-style:italic;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:13px}
+.npdeck{font-size:17px;line-height:1.5;font-weight:700;margin:0 0 15px}
+.npcols{columns:2;column-gap:28px;column-rule:1px solid var(--line)}
+.npcols p{font-size:13.5px;line-height:1.62;margin:0 0 11px;text-align:justify;break-inside:avoid-column}
+.npcols p.dropcap::first-letter{font-size:3.1em;font-weight:900;float:left;line-height:.76;padding:4px 9px 0 0}
+.npmore{margin-top:4px;background:none;border:none;font-family:var(--font);font-weight:800;font-size:13px;color:var(--ink);cursor:pointer;padding:0;border-bottom:2px solid var(--ink)}
+.nprule{height:0;border-top:3px double var(--ink);margin:24px 0 20px}
+.npgrid{display:grid;grid-template-columns:repeat(3,1fr)}
+.npstory{padding:0 22px;cursor:pointer;border-left:1px solid var(--line)}
+.npstory:first-child{padding-left:0;border-left:none}
+.npstory:last-child{padding-right:0}
+.npsub{font-size:18px;font-weight:800;line-height:1.14;margin:2px 0 7px}
+.npstory:hover .npsub{text-decoration:underline}
+.npstory p{font-family:Georgia,serif;font-size:13px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
+.npread{font-family:var(--font);font-size:12px;font-weight:800;color:var(--ink)}
+@media(max-width:760px){
+  .newspaper{padding:22px 18px 24px}
+  .nplead{grid-template-columns:1fr;gap:16px}
+  .npfig{max-width:150px}
+  .npcols{columns:1}
+  .npgrid{grid-template-columns:1fr}
+  .npstory{padding:14px 0;border-left:none;border-top:1px solid var(--line)}
+  .npstory:first-child{border-top:none;padding-top:0}
+}
