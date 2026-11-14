@@ -595,3 +595,17 @@ html[data-theme="dark"] .lderr{color:#ff8a8a}
 .rdnav small{font-family:var(--font);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
 .rdnav .rdnext{text-align:right;align-items:flex-end}
 .rdnav button:hover{color:var(--ink)}
+
+/* ===== Reader open: folded-paper (gatefold) unfold ===== */
+.modal.reader{animation:readerAppear .26s ease}
+@keyframes readerAppear{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.rdpage.in{animation:rdIn .5s ease}
+@keyframes rdIn{from{opacity:0}to{opacity:1}}
+.rdcover{position:absolute;inset:0;z-index:6;perspective:2200px;pointer-events:none;overflow:hidden}
+.rdflap{position:absolute;left:0;right:0;height:50.2%;background:var(--card);backface-visibility:hidden;will-change:transform}
+.rdflap.t{top:0;transform-origin:50% 100%;box-shadow:inset 0 -3px 9px rgba(0,0,0,.07);animation:unfoldT .95s cubic-bezier(.52,.04,.18,1) forwards}
+.rdflap.b{bottom:0;transform-origin:50% 0%;box-shadow:inset 0 3px 9px rgba(0,0,0,.07);animation:unfoldB .95s cubic-bezier(.52,.04,.18,1) forwards}
+@keyframes unfoldT{0%{transform:rotateX(0)}100%{transform:rotateX(-120deg)}}
+@keyframes unfoldB{0%{transform:rotateX(0)}100%{transform:rotateX(120deg)}}
+html[data-theme="dark"] .rdflap.t{box-shadow:inset 0 -3px 9px rgba(0,0,0,.45)}
+html[data-theme="dark"] .rdflap.b{box-shadow:inset 0 3px 9px rgba(0,0,0,.45)}

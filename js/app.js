@@ -263,7 +263,7 @@ function openArticles(start){
   openModal('reader',`<div class="reader"><div class="rdbar"><div class="rdprog" id="rdProg"></div></div>
     <button class="rdx" id="rdX" aria-label="Close">✕</button>
     <div class="rdscroll" id="rdScroll"><article class="rdpage" id="rdPage"></article>
-      <div class="rdnav" id="rdNav"></div></div></div>`);
+      <div class="rdnav" id="rdNav"></div></div><div class="rdcover" id="rdCover"><div class="rdflap t"></div><div class="rdflap b"></div></div></div>`);
   const scroll=$('#rdScroll'),page=$('#rdPage'),prog=$('#rdProg'),nav=$('#rdNav');
   function render(n){
     i=(n+ARTICLES.length)%ARTICLES.length;const a=ARTICLES[i];
@@ -278,6 +278,7 @@ function openArticles(start){
   scroll.onscroll=()=>{const h=scroll.scrollHeight-scroll.clientHeight;prog.style.width=(h>0?Math.min(100,scroll.scrollTop/h*100):0)+'%';};
   $('#rdX').onclick=closeModal;
   render(i);
+  setTimeout(function(){var c=document.getElementById('rdCover');if(c)c.style.display='none';},1000);
 }
 
 /* ==========================================================
