@@ -238,28 +238,47 @@ function openFigma(){figSel=0;
 const newsFig='<svg viewBox="0 0 100 120" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="8" width="88" height="104" fill="none" stroke="currentColor" stroke-width="2"/><rect x="16" y="16" width="68" height="10"/><rect x="16" y="32" width="30" height="34"/><g opacity=".5"><rect x="50" y="33" width="34" height="3"/><rect x="50" y="40" width="34" height="3"/><rect x="50" y="47" width="34" height="3"/><rect x="50" y="54" width="26" height="3"/><rect x="16" y="74" width="68" height="3"/><rect x="16" y="81" width="68" height="3"/><rect x="16" y="88" width="68" height="3"/><rect x="16" y="95" width="50" height="3"/></g></svg>';
 function renderNewspaper(){
   const el=document.getElementById('newsPaper');if(!el||typeof ARTICLES==='undefined'||!ARTICLES.length)return;
-  const lead=ARTICLES[0],rest=ARTICLES.slice(1);
   const strip='UI/UX ✦ PROCESS ✦ CRAFT ✦ ENGINEERING ✦ NOTES ✦ ';
-  el.innerHTML=`<div class="newspaper"><div class="npmast"><div class="npmline">Vol. I · Hyderabad</div><h3 class="npname">The Design Dispatch</h3><div class="npmline">By Nandigama Prashanth Kumar · ${esc((lead.date||'').toString())} · No. ${ARTICLES.length}</div></div>
+  const card=(a,i)=>`<article class="npcard${i>=6?' more':''}" data-i="${i}"><div class="npckick">${esc(a.kicker||'')} · ${esc(a.date||'')}</div><h4 class="npctitle">${esc(a.title||'')}</h4><p class="npcexc">${esc(a.pull||'')}</p><div class="npcfoot"><span>${esc(a.read||'')} read</span><span class="npcarrow">Read →</span></div></article>`;
+  const extra=ARTICLES.length-6;
+  el.innerHTML=`<div class="newspaper"><div class="npmast"><div class="npmline">Vol. I · Hyderabad · ${esc((ARTICLES[0].date||'').toString())}</div><h3 class="npname">The Design Dispatch</h3><div class="npmline">Dispatches on UI/UX, MERN &amp; the craft of building · by Nandigama Prashanth Kumar</div></div>
   <div class="npstrip"><span>${strip.repeat(6)}</span></div>
-  <div class="nplead"><div class="npfig">${newsFig}</div><div class="npleadtext"><div class="npkick">${esc(lead.kicker||'')}</div><h4 class="nphead" data-i="0">${esc(lead.title||'')}</h4><div class="npby">By Nandigama Prashanth Kumar · ${esc(lead.read||'')} read</div><p class="npdeck">${esc(lead.pull||'')}</p><div class="npcols">${(lead.body||[]).map((p,i)=>`<p${i===0?' class="dropcap"':''}>${esc(p)}</p>`).join('')}</div><button class="npmore" data-i="0">Read the full story →</button></div></div>
-  <div class="nprule"></div>
-  <div class="npgrid">${rest.map((a,k)=>`<div class="npstory" data-i="${k+1}"><div class="npkick">${esc(a.kicker||'')} · ${esc(a.date||'')}</div><h5 class="npsub">${esc(a.title||'')}</h5><p>${esc(a.pull||'')}</p><span class="npread">Read →</span></div>`).join('')}</div></div>`;
-  el.querySelectorAll('[data-i]').forEach(x=>x.onclick=()=>openArticles(+x.dataset.i));
+  <div class="npcards" id="npCards">${ARTICLES.map(card).join('')}</div>
+  ${extra>0?`<div class="npmorewrap"><button class="npmorebtn" id="npMore">Show more stories (${extra})</button></div>`:''}</div>`;
+  el.querySelectorAll('.npcard').forEach(x=>x.onclick=()=>openArticles(+x.dataset.i));
+  const mb=el.querySelector('#npMore');
+  if(mb)mb.onclick=()=>{const c=el.querySelector('#npCards');const ex=c.classList.toggle('expanded');mb.textContent=ex?'Show fewer':('Show more stories ('+extra+')');};
+}
+function articleHTML(a){
+  const body=(a.body||[]).map((p,i)=>`<p${i===0?' class="dropcap"':''}>${esc(p)}</p>`).join('');
+  return `<div class="rdkick">${esc(a.kicker||'')}</div><h1 class="rdtitle">${esc(a.title||'')}</h1>
+    <div class="rdby"><span class="rddot"></span>By Nandigama Prashanth Kumar<span class="rdsep">·</span>${esc(a.date||'')}<span class="rdsep">·</span>${esc(a.read||'')} read</div>
+    ${a.pull?`<p class="rdstand">${esc(a.pull)}</p>`:''}
+    <div class="rdrule"></div>
+    ${body}
+    ${(a.tags&&a.tags.length)?`<div class="rdtags">${a.tags.map(t=>`<span>#${esc(t)}</span>`).join('')}</div>`:''}`;
 }
 function openArticles(start){
-  openModal('',`<div class="mtop"><div class="traffic"><i class="close"></i><i></i><i></i></div><div class="mtitle">My UI/UX Articles</div>
-    <div class="toggle"><button class="on">📖 Reader</button></div></div>
-    <div class="artbody"><div class="artlist" id="artList"></div><div class="artread" id="artRead"></div></div>`);
-  const list=$('#artList');
-  list.innerHTML=ARTICLES.map((a,i)=>`<div class="artitem ${i===(Number.isInteger(start)?start:0)?'on':''}" data-i="${i}"><h5>${esc(a.title)}</h5><div class="amet">${esc(a.kicker)} · ${esc(a.date)} · ${esc(a.read)}</div></div>`).join('');
-  const show=i=>{$$('.artitem',list).forEach(x=>x.classList.toggle('on',+x.dataset.i===i));const a=ARTICLES[i];
-    $('#artRead').innerHTML=`<div class="akicker">${esc(a.kicker)}</div><h1>${esc(a.title)}</h1>
-      <div class="ameta"><span>By Nandigama Prashanth Kumar</span><span>${esc(a.date)}</span><span>${esc(a.read)} read</span></div>
-      <div class="apull">${esc(a.pull)}</div>${a.body.map(p=>`<p>${esc(p)}</p>`).join('')}
-      <div class="atags">${a.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>`;
-    $('#artRead').scrollTop=0;};
-  $$('.artitem',list).forEach(x=>x.onclick=()=>show(+x.dataset.i));show(Number.isInteger(start)?start:0);}
+  let i=Number.isInteger(start)?start:0;
+  openModal('reader',`<div class="reader"><div class="rdbar"><div class="rdprog" id="rdProg"></div></div>
+    <button class="rdx" id="rdX" aria-label="Close">✕</button>
+    <div class="rdscroll" id="rdScroll"><article class="rdpage" id="rdPage"></article>
+      <div class="rdnav" id="rdNav"></div></div></div>`);
+  const scroll=$('#rdScroll'),page=$('#rdPage'),prog=$('#rdProg'),nav=$('#rdNav');
+  function render(n){
+    i=(n+ARTICLES.length)%ARTICLES.length;const a=ARTICLES[i];
+    page.innerHTML=articleHTML(a);
+    const prev=ARTICLES[(i-1+ARTICLES.length)%ARTICLES.length],next=ARTICLES[(i+1)%ARTICLES.length];
+    nav.innerHTML=`<button class="rdprev"><small>← Previous</small>${esc(prev.title)}</button><button class="rdnext"><small>Next →</small>${esc(next.title)}</button>`;
+    nav.querySelector('.rdprev').onclick=()=>render(i-1);
+    nav.querySelector('.rdnext').onclick=()=>render(i+1);
+    page.classList.remove('in');void page.offsetWidth;page.classList.add('in');
+    scroll.scrollTop=0;prog.style.width='0%';
+  }
+  scroll.onscroll=()=>{const h=scroll.scrollHeight-scroll.clientHeight;prog.style.width=(h>0?Math.min(100,scroll.scrollTop/h*100):0)+'%';};
+  $('#rdX').onclick=closeModal;
+  render(i);
+}
 
 /* ==========================================================
    GOOGLE SHEETS (published CSV) -> auto-updating data
