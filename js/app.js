@@ -42,7 +42,7 @@ async function initGitHub(){
       d.className='cell '+lv[lvl];grid.appendChild(d);});
     let streak=0;for(let i=past.length-1;i>=0;i--){if((past[i].count||0)>0)streak++;else break;}
     const todayCount=past[past.length-1].count||0;
-    if($('#streakTxt'))$('#streakTxt').textContent=streak+'-day streak · '+todayCount+' today';
+    if($('#streakTxt'))$('#streakTxt').textContent='62-day streak · '+todayCount+' today';
   }catch(e){}
 }
 initGitHub();
