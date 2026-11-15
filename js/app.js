@@ -369,7 +369,8 @@ function nlCardHTML(n){var meta='BEYOND THE CODE'+(n.date?' · '+esc(n.date):'')
   return `<a class="nlcard" href="${esc(n.link||'#')}" ${n.link&&n.link!=='#'?'target="_blank" rel="noopener"':''}>
   <div class="nltop"><span class="nlbadge">${esc(n.issue||'')}</span> ${meta}</div>
   <h4>${esc(n.title||'')}</h4>${blurb}<div class="nlfoot">Read on LinkedIn →</div></a>`;}
-function renderCarousel(list){const h=list.map(nlCardHTML).join('');track.innerHTML=h+h;} // duplicate for seamless loop
+function renderCarousel(list){const h=list.map(nlCardHTML).join('');track.innerHTML=h+h; // duplicate for seamless loop
+  track.style.animationDuration=Math.max(48,list.length*8)+'s';} // ~8s per card so speed stays constant as editions grow
 renderCarousel(NEWSLETTER);
 async function initNewsletter(){
   let r=await loadSheet(SHEETS.newsletter,null);
