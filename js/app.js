@@ -420,35 +420,52 @@ function spineStyle(b){
   const w=Math.round((32+(h%6)*4)*sc),ht=Math.round((160+((h>>3)%5)*12)*sc),fs=Math.max(9,Math.min(13,Math.round(w*0.3)));
   return {bg:bg,fg:fg,w:w,ht:ht,fs:fs};
 }
-function spineHTML(b,i,s){
-  return `<div class="book" data-i="${i}" style="width:${s.w}px;height:${s.ht}px;background:${s.bg};color:${s.fg};font-size:${s.fs}px">`
+let bookStatusFilter='all';
+const CAT_ORDER=['John C. Maxwell','Stock Market','Spiritual','Secular'];
+function statusKey(b){const s=((b&&b.Status)||'').toLowerCase().trim();
+  if(/to[\s-]?read|want|wish|queue|unread|\byet\b|not started/.test(s))return 'toread';
+  if(/read(ing)?\s*now|currently|in[\s-]?progress|^reading$/.test(s)||s==='reading')return 'reading';
+  return 'read';}
+function statusLabel(k){return k==='reading'?'Reading now':k==='toread'?'To read':'Read';}
+function spineHTML(b,i,s){const sk=statusKey(b);
+  return `<div class="book sk-${sk}" data-i="${i}" style="width:${s.w}px;height:${s.ht}px;background:${s.bg};color:${s.fg};font-size:${s.fs}px">`
+    +(sk!=='read'?`<span class="bflag">${sk==='reading'?'\u25b6':'\u25cb'}</span>`:'')
     +`${b.Rating?'<span class="brate">\u2605</span>':''}`
     +`<span class="st2">${esc(b.Title||'')}</span><span class="sa2">${esc(b.Author||'')}</span></div>`;
 }
 function renderShelf(filter=''){
   const wrap=$('#shelfUnit');if(!wrap)return;const f=(filter||'').toLowerCase();
-  const list=books.filter(b=>!f||((b.Title||'')+' '+(b.Author||'')+' '+(b.Tags||'')).toLowerCase().includes(f))
-    .slice().sort((a,b)=>(a.Title||'').localeCompare(b.Title||'',undefined,{sensitivity:'base'}));
-  if(!list.length){wrap.innerHTML=emptyMsg('books','Title, Author, Status, Rating, Finished, Learnings, Tags, CoverURL');return;}
+  let list=books.filter(b=>!f||((b.Title||'')+' '+(b.Author||'')+' '+(b.Tags||'')+' '+(b.Category||'')).toLowerCase().includes(f));
+  if(bookStatusFilter!=='all')list=list.filter(b=>statusKey(b)===bookStatusFilter);
+  if(!list.length){wrap.innerHTML=emptyMsg('books','Title, Author, Category, Status, Rating, Finished, Learnings, Tags, CoverURL');return;}
+  const cats={};list.forEach(b=>{const c=(b.Category||'Other').trim()||'Other';(cats[c]=cats[c]||[]).push(b);});
+  const order=CAT_ORDER.filter(c=>cats[c]).concat(Object.keys(cats).filter(c=>!CAT_ORDER.includes(c)).sort());
   const cw=Math.max(240,(wrap.clientWidth||820)-48),gap=2;
-  let rows=[],cur=[],curW=0;
-  list.forEach(b=>{const s=spineStyle(b),w=s.w+gap;
-    if(curW+w>cw&&cur.length){rows.push(cur);cur=[];curW=0;}
-    cur.push({b:b,s:s});curW+=w;});
-  if(cur.length)rows.push(cur);
-  wrap.innerHTML=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
+  let html='';
+  order.forEach(c=>{
+    const items=cats[c].slice().sort((a,b)=>(a.Title||'').localeCompare(b.Title||'',undefined,{sensitivity:'base'}));
+    let rows=[],cur=[],curW=0;
+    items.forEach(b=>{const s=spineStyle(b),w=s.w+gap;
+      if(curW+w>cw&&cur.length){rows.push(cur);cur=[];curW=0;}
+      cur.push({b:b,s:s});curW+=w;});
+    if(cur.length)rows.push(cur);
+    html+=`<div class="shelfcat"><span class="shelfcatname">${esc(c)}</span><span class="shelfcatn">${items.length}</span></div>`;
+    html+=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
+  });
+  wrap.innerHTML=html;
   $$('.book',wrap).forEach(el=>el.onclick=()=>openBook(books[+el.dataset.i]));
 }
 function coverSrc(b){let u=b&&b.CoverURL?String(b.CoverURL).trim():'';if(!u)return '';if(/^https?:\/\//i.test(u))return u;if(u.indexOf('/')>=0)return u;return 'assets/covers/'+u;}
-function openBook(b){const src=coverSrc(b);const img=!!src;
+function openBook(b){const src=coverSrc(b);const img=!!src;const sk=statusKey(b);
   openModal('small bookmodal',`<div class="mtop"><div class="traffic"><i class="close"></i><i></i><i></i></div><div class="mtitle">Bookshelf — ${esc(b.Title)}</div></div>
-    <div class="bmgrid"><div><div class="bmcover ${img?'cimg':''}" ${img?`style="padding:0;overflow:hidden"`:''}>
+    <div class="bmgrid"><div><div class="bmcover ${img?'cimg':''}" id="bmCover" ${img?`style="padding:0;overflow:hidden"`:''}>
       ${img?`<img src="${esc(src)}" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1)">`:
         `<div class="bt" style="font-size:15px;font-weight:800">${esc(b.Title)}</div><div class="ba" style="font-size:11px;color:var(--ink-faint);text-transform:uppercase">${esc(b.Author||'')}</div>`}</div></div>
     <div><h2>${esc(b.Title)}</h2><div class="bmauth">${esc(b.Author||'')}</div>
-      <div class="bmmeta"><span>${esc(b.Status||'Read')}</span>${b.Rating?`<span>★ ${esc(b.Rating)}/5</span>`:''}${b.Finished?`<span>Finished ${esc(b.Finished)}</span>`:''}</div>
+      <div class="bmmeta"><span class="bmcat">${esc(b.Category||'')}</span><span class="bmstat sk-${sk}">${statusLabel(sk)}</span>${b.Rating?`<span>★ ${esc(b.Rating)}/5</span>`:''}${b.Finished?`<span>Finished ${esc(b.Finished)}</span>`:''}</div>
       <div class="bmlearn"><b>WHAT I LEARNED</b>${esc(b.Learnings||'Notes coming soon.')}</div>
-      ${b.Tags?`<div class="atags" style="margin-top:16px">${b.Tags.split(',').map(t=>`<span>${esc(t.trim())}</span>`).join('')}</div>`:''}</div></div>`);}
+      ${b.Tags?`<div class="atags" style="margin-top:16px">${b.Tags.split(',').map(t=>`<span>${esc(t.trim())}</span>`).join('')}</div>`:''}</div></div>`);
+  if(!img){fetchCover(b).then(u=>{if(!u)return;b.CoverURL=u;const box=document.getElementById('bmCover');if(box){box.classList.add('cimg');box.style.padding='0';box.style.overflow='hidden';box.innerHTML=`<img src="${esc(u)}" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1)">`;}});}}
 async function fetchCover(b){
   if(b.CoverURL&&String(b.CoverURL).trim())return String(b.CoverURL).trim();
   const title=b.Title||'',author=b.Author||'';
@@ -481,10 +498,11 @@ async function initBooks(){
     const r=await loadSheet(SHEETS.books,SAMPLE_BOOKS);books=(r.data&&r.data.length)?r.data:SAMPLE_BOOKS;
     const dot=$('#bookLive');
     if(dot){dot.classList.toggle('ok',r.live);const sp=dot.querySelector('span');if(sp)sp.textContent=r.live?'Live from Google Sheets':'Sample data · share your Sheet to go live';}
-    renderShelf();enrichCovers();
-  }catch(e){books=SAMPLE_BOOKS;renderShelf();enrichCovers();}
+    renderShelf();
+  }catch(e){books=SAMPLE_BOOKS;renderShelf();}
 }
 $('#shelfSearchInput').oninput=e=>renderShelf(e.target.value);
+$$('#shelfStatusChips button').forEach(btn=>btn.onclick=()=>{bookStatusFilter=btn.dataset.s;$$('#shelfStatusChips button').forEach(x=>x.classList.toggle('on',x===btn));const si=$('#shelfSearchInput');renderShelf(si?si.value:'');});
 
 /* ==========================================================
    DOCK

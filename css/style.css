@@ -241,6 +241,20 @@ html[data-theme="dark"] .dock{background:rgba(28,28,28,.6)}
 .book .st2{writing-mode:vertical-rl;text-orientation:mixed;font-weight:800;line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:74%;letter-spacing:.01em}
 .book .sa2{margin-top:auto;writing-mode:vertical-rl;text-orientation:mixed;font-weight:700;font-size:8px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:24%;text-transform:uppercase;letter-spacing:.03em}
 .book .brate{position:absolute;top:5px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;opacity:.65}
+.book .bflag{position:absolute;top:4px;right:4px;font-size:7px;line-height:1;opacity:.9}
+.book.sk-toread{opacity:.42}
+.book.sk-toread:hover{opacity:.85}
+.book.sk-reading{box-shadow:inset -5px 0 9px rgba(0,0,0,.22),inset 3px 0 3px rgba(255,255,255,.1),2px 3px 8px rgba(0,0,0,.22),0 0 0 2px var(--ink);}
+.shelfcat{display:flex;align-items:baseline;gap:9px;margin:4px 2px 2px;padding-top:6px}
+.shelfcat:first-child{padding-top:0}
+.shelfcatname{font-weight:800;font-size:15px;letter-spacing:-.01em}
+.shelfcatn{font-size:11px;font-weight:800;color:var(--ink-faint);border:1px solid var(--line);border-radius:20px;padding:1px 8px}
+.shelfchips{display:flex;gap:7px;flex-wrap:wrap;margin:-4px 0 18px}
+.shelfchips button{font-family:var(--font);font-size:12.5px;font-weight:700;color:var(--ink-soft);background:var(--bg2);border:1px solid var(--line);border-radius:30px;padding:6px 14px;cursor:pointer;transition:all .15s}
+.shelfchips button:hover{color:var(--ink)}
+.shelfchips button.on{background:var(--sel);color:var(--sel-ink);border-color:var(--sel)}
+.bmstat.sk-reading{background:var(--ink)!important;color:var(--card)!important;border-color:var(--ink)!important}
+.bmcat{text-transform:uppercase;letter-spacing:.04em;font-size:10.5px!important;opacity:.8}
 .shelfhead{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
 .shelfsearch{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:30px;padding:8px 16px;background:var(--bg2)}
 .shelfsearch input{border:none;background:transparent;outline:none;font-family:var(--font);font-size:13px;color:var(--ink);width:170px}
