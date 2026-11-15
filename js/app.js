@@ -364,9 +364,11 @@ $$('#learnTabs button').forEach(b=>b.onclick=()=>{learnTab=b.dataset.t;$$('#lear
    NEWSLETTER CAROUSEL
    ========================================================== */
 const track=$('#carotrack');
-function nlCardHTML(n){return `<a class="nlcard" href="${esc(n.link||'#')}" ${n.link&&n.link!=='#'?'target="_blank" rel="noopener"':''}>
-  <div class="nltop"><span class="nlbadge">${esc(n.issue||'')}</span> BEYOND THE CODE · ${esc(n.date||'')}</div>
-  <h4>${esc(n.title||'')}</h4><p>${esc(n.blurb||'')}</p><div class="nlfoot">Read on LinkedIn →</div></a>`;}
+function nlCardHTML(n){var meta='BEYOND THE CODE'+(n.date?' · '+esc(n.date):'');
+  var blurb=n.blurb?'<p>'+esc(n.blurb)+'</p>':'';
+  return `<a class="nlcard" href="${esc(n.link||'#')}" ${n.link&&n.link!=='#'?'target="_blank" rel="noopener"':''}>
+  <div class="nltop"><span class="nlbadge">${esc(n.issue||'')}</span> ${meta}</div>
+  <h4>${esc(n.title||'')}</h4>${blurb}<div class="nlfoot">Read on LinkedIn →</div></a>`;}
 function renderCarousel(list){const h=list.map(nlCardHTML).join('');track.innerHTML=h+h;} // duplicate for seamless loop
 renderCarousel(NEWSLETTER);
 async function initNewsletter(){

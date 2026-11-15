@@ -18,12 +18,14 @@ const SHEETS = {
 
 /* --- Newsletter (LinkedIn) carousel --- */
 const NEWSLETTER = [
-  { issue:"#07", date:"Nov 2026", title:"Designing for the 20% nobody demos", blurb:"Empty, loading and error states are where real products live. A look at how I design the unglamorous paths.", link:"#" },
-  { issue:"#06", date:"Oct 2026", title:"MERN, but make it fast", blurb:"The three things that actually slowed my apps down — and the one-line fixes that brought them back.", link:"#" },
-  { issue:"#05", date:"Oct 2026", title:"What an EA taught me about discipline", blurb:"Automating a trading strategy is mostly about removing yourself from the keyboard. Lessons from building bots.", link:"#" },
-  { issue:"#04", date:"Sep 2026", title:"A design system in a weekend", blurb:"Tokens first, components second, screens last. How I keep ten screens consistent without losing my mind.", link:"#" },
-  { issue:"#03", date:"Sep 2026", title:"From Figma to deployed", blurb:"Why I don't 'hand off' designs — I build them. The messy, honest middle between design and code.", link:"#" },
-  { issue:"#02", date:"Aug 2026", title:"Reading the market at a glance", blurb:"Most dashboards drown you in numbers. Designing one that tells you what matters.", link:"#" }
+  { issue:"#61", date:"", title:"US bank rules left AI agents out. Two regulators just sketched what fills the gap.", blurb:"", link:"https://www.linkedin.com/pulse/us-bank-rules-left-ai-agents-out-two-regulators-just-sketched-kumar-nlfof/" },
+  { issue:"#60", date:"", title:"Your coding agent needed somewhere to put a screenshot. It chose public GitHub.", blurb:"", link:"https://www.linkedin.com/pulse/your-coding-agent-needed-somewhere-put-screenshot-chose-kumar-udfmf/" },
+  { issue:"#59", date:"", title:"Your agent is about to need its own KYC file", blurb:"", link:"https://www.linkedin.com/pulse/your-agent-need-its-own-kyc-file-nandigama-prashanth-kumar-xkhnf/" },
+  { issue:"#58", date:"", title:"Losing Your Place: When Back Throws Away the Scrolling You Already Did", blurb:"", link:"https://www.linkedin.com/pulse/losing-your-place-when-back-throws-away-scrolling-you-kumar-2v41f/" },
+  { issue:"#57", date:"", title:"The All-or-Nothing Notification Switch", blurb:"", link:"https://www.linkedin.com/pulse/all-or-nothing-notification-switch-nandigama-prashanth-kumar-7gywf/" },
+  { issue:"#55", date:"", title:"Typing Is Not Activity: The Timeout That Deletes Your Work", blurb:"", link:"https://www.linkedin.com/pulse/typing-activity-timeout-deletes-your-work-nandigama-prashanth-kumar-i77mf/" },
+  { issue:"#52", date:"", title:"The Unscoped Delete: when an app won't say which copy it's destroying", blurb:"", link:"https://www.linkedin.com/pulse/unscoped-delete-when-app-wont-say-which-copy-its-destroying-kumar-8jegf/" },
+  { issue:"#50", date:"", title:"The Verb With Two Scopes: when \"Delete\" means three different things", blurb:"", link:"https://www.linkedin.com/pulse/verb-two-scopes-when-delete-means-three-different-things-kumar-ffjef/" }
 ];
 
 /* --- Fallback data (used until you connect a Sheet) --- */
