@@ -441,21 +441,14 @@ function renderShelf(filter=''){
     if(books&&books.length){wrap.innerHTML='<p style="padding:30px 4px;color:var(--ink-faint);font-size:14px">Nothing on this shelf'+(f?' for “'+esc(filter)+'”':'')+' yet.</p>';}
     else{wrap.innerHTML=emptyMsg('books','Title, Author, Category, Status, Rating, Finished, Learnings, Tags, CoverURL');}
     return;}
-  const cats={};list.forEach(b=>{const c=(b.Category||'Other').trim()||'Other';(cats[c]=cats[c]||[]).push(b);});
-  const order=CAT_ORDER.filter(c=>cats[c]).concat(Object.keys(cats).filter(c=>!CAT_ORDER.includes(c)).sort());
+  const items=list.slice().sort((a,b)=>(a.Title||'').localeCompare(b.Title||'',undefined,{sensitivity:'base'}));
   const cw=Math.max(240,(wrap.clientWidth||820)-48),gap=2;
-  let html='';
-  order.forEach(c=>{
-    const items=cats[c].slice().sort((a,b)=>(a.Title||'').localeCompare(b.Title||'',undefined,{sensitivity:'base'}));
-    let rows=[],cur=[],curW=0;
-    items.forEach(b=>{const s=spineStyle(b),w=s.w+gap;
-      if(curW+w>cw&&cur.length){rows.push(cur);cur=[];curW=0;}
-      cur.push({b:b,s:s});curW+=w;});
-    if(cur.length)rows.push(cur);
-    html+=`<div class="shelfcat"><span class="shelfcatname">${esc(c)}</span><span class="shelfcatn">${items.length}</span></div>`;
-    html+=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
-  });
-  wrap.innerHTML=html;
+  let rows=[],cur=[],curW=0;
+  items.forEach(b=>{const s=spineStyle(b),w=s.w+gap;
+    if(curW+w>cw&&cur.length){rows.push(cur);cur=[];curW=0;}
+    cur.push({b:b,s:s});curW+=w;});
+  if(cur.length)rows.push(cur);
+  wrap.innerHTML=rows.map(row=>`<div class="shelfrow">${row.map(o=>spineHTML(o.b,books.indexOf(o.b),o.s)).join('')}</div><div class="shelfplank"></div>`).join('');
   $$('.book',wrap).forEach(el=>el.onclick=()=>openBook(books[+el.dataset.i]));
 }
 function coverSrc(b){let u=b&&b.CoverURL?String(b.CoverURL).trim():'';if(!u)return '';if(/^https?:\/\//i.test(u))return u;if(u.indexOf('/')>=0)return u;return 'assets/covers/'+u;}
