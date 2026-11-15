@@ -437,7 +437,10 @@ function renderShelf(filter=''){
   const wrap=$('#shelfUnit');if(!wrap)return;const f=(filter||'').toLowerCase();
   let list=books.filter(b=>!f||((b.Title||'')+' '+(b.Author||'')+' '+(b.Tags||'')+' '+(b.Category||'')).toLowerCase().includes(f));
   if(bookStatusFilter!=='all')list=list.filter(b=>statusKey(b)===bookStatusFilter);
-  if(!list.length){wrap.innerHTML=emptyMsg('books','Title, Author, Category, Status, Rating, Finished, Learnings, Tags, CoverURL');return;}
+  if(!list.length){
+    if(books&&books.length){wrap.innerHTML='<p style="padding:30px 4px;color:var(--ink-faint);font-size:14px">Nothing on this shelf'+(f?' for “'+esc(filter)+'”':'')+' yet.</p>';}
+    else{wrap.innerHTML=emptyMsg('books','Title, Author, Category, Status, Rating, Finished, Learnings, Tags, CoverURL');}
+    return;}
   const cats={};list.forEach(b=>{const c=(b.Category||'Other').trim()||'Other';(cats[c]=cats[c]||[]).push(b);});
   const order=CAT_ORDER.filter(c=>cats[c]).concat(Object.keys(cats).filter(c=>!CAT_ORDER.includes(c)).sort());
   const cw=Math.max(240,(wrap.clientWidth||820)-48),gap=2;
