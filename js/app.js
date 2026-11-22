@@ -549,6 +549,13 @@ window.addEventListener('resize',()=>{clearTimeout(window.__srt);window.__srt=se
 books=SAMPLE_BOOKS;try{renderShelf();}catch(e){console.error('shelf',e);}
 learnData=SAMPLE_LEARNINGS;podData=SAMPLE_PODCASTS;try{renderLearnTab();}catch(e){console.error('learn',e);}
 initLearnings();initBooks();initNewsletter();try{renderNewspaper();}catch(e){console.error('news',e);}initArticles();
+function renderBadges(){const g=$('#badgeGrid');if(!g||typeof BADGES==='undefined')return;
+  g.innerHTML=BADGES.map(function(b){return `<figure class="badge">
+    <div class="badgeimg"><img src="assets/badges/${esc(b.img)}.png?v=eb1" alt="${esc(b.title)}" loading="lazy"></div>
+    <figcaption><h4>${esc(b.title)}</h4><span class="badgeiss">${esc(b.issuer)}</span><span class="badgedate">${esc(b.date)}</span></figcaption>
+  </figure>`;}).join('');
+  var bc=$('#badgeCount');if(bc)bc.textContent=BADGES.length;}
+try{renderBadges();}catch(e){console.error('badges',e);}
 
 /* ---------------- CUSTOM FOLLOWER CURSOR ---------------- */
 (function(){

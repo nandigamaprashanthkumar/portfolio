@@ -28,6 +28,19 @@ const NEWSLETTER = [
   { issue:"#50", date:"", title:"The Verb With Two Scopes: when \"Delete\" means three different things", blurb:"", link:"https://www.linkedin.com/pulse/verb-two-scopes-when-delete-means-three-different-things-kumar-ffjef/" }
 ];
 
+/* --- Certifications & badges --- */
+const BADGES = [
+  { title:"Claude Certified Architect - Professional", issuer:"Anthropic", date:"Expires Nov 22, 2027", img:"claude-architect-professional" },
+  { title:"Claude Certified Architect - Foundations", issuer:"Anthropic", date:"Expires Jun 5, 2027", img:"claude-architect-foundations" },
+  { title:"Claude Certified Associate - Foundations", issuer:"Anthropic", date:"Expires Nov 22, 2027", img:"claude-associate-foundations" },
+  { title:"Claude Certified Developer - Foundations", issuer:"Anthropic", date:"Expires Sep 26, 2027", img:"claude-developer-foundations" },
+  { title:"Claude Partner Badge - Claude Code", issuer:"Anthropic", date:"Expires Mar 22, 2027", img:"claude-partner-code" },
+  { title:"Context Engineering Foundation", issuer:"Cognizant", date:"Issued Mar 30, 2026", img:"context-engineering" },
+  { title:"Add Agents to Gemini", issuer:"Google Cloud", date:"Issued Sep 29, 2026", img:"add-agents-gemini" },
+  { title:"Deploy Gemini with Workspace Data Sources and Model Armor", issuer:"Google Cloud", date:"Issued Sep 28, 2026", img:"deploy-gemini-workspace" },
+  { title:"Govern Agent Access with Gemini platform", issuer:"Google Cloud", date:"Issued Sep 29, 2026", img:"govern-agent-gemini" }
+];
+
 /* --- Fallback data (used until you connect a Sheet) --- */
 const SAMPLE_LEARNINGS = [
   { Date:"2026-11-08", Title:"Debouncing vs throttling, finally straight", Source:"Josh Comeau", Type:"Article", Note:"Debounce waits for quiet; throttle fires on a timer. Search = debounce, scroll = throttle.", Tags:"frontend,react", Link:"#" },
