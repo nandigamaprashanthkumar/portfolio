@@ -1,0 +1,28 @@
+name: Daily streak heartbeat
+
+# Runs on GitHub's servers every day and makes one tiny commit authored
+# with the account's verified GitHub noreply email, so it counts as a real
+# contribution and keeps the streak alive with no manual action.
+
+on:
+  schedule:
+    - cron: '17 3 * * *'   # 03:17 UTC daily = 08:47 IST (off-the-hour to avoid delays)
+  workflow_dispatch:        # lets you run it on demand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write heartbeat and commit
+        run: |
+          git config user.name "nandigamaprashanthkumar"
+          git config user.email "96291949+nandigamaprashanthkumar@users.noreply.github.com"
+          mkdir -p .streak
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .streak/heartbeat.txt
+          git add .streak/heartbeat.txt
+          git commit -m "chore: daily streak heartbeat [skip ci]" || { echo "no change"; exit 0; }
+          git push
